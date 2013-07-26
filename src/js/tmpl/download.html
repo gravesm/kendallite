@@ -1,0 +1,24 @@
+<div class="ogp-download-row ogp-row">
+    <div class="ogp-download-content ogp-text-overflow" title="<%= d.LayerDisplayName %>">
+        <%= d.LayerDisplayName %>
+    </div>
+    <div>
+        <% if (typeof d.Access === "object" && d.Access.toLowerCase() === "restricted" && !d.isAuthenticated()) { %>
+            <div class="result-icon ogp-authentication-required"
+                title="You must log in to download this layer"></div>
+        <% } else if (d.downloadStatus === "downloading") { %>
+            <div class="result-icon ogp-waiting" title="Layer is already being downloaded"></div>
+        <% } else { %>
+            <select name="<%= d.LayerId %>">
+                <option value="skip">Skip layer</option>
+                <% if (d.isVector) { %>
+                    <option value="shp">Shapefile</option>
+                    <option value="kmz">KMZ</option>
+                <% } else { %>
+                    <option value="geotiff">GeoTiff</option>
+                    <option value="kmz">KMZ</option>
+                <% } %>
+            </select>
+        <% } %>
+    </div>
+</div>

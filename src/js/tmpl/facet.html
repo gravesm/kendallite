@@ -1,0 +1,16 @@
+<h4><%= d.display %></h4>
+<ul>
+    <% _.each(d.counts, function(item) { %>
+        <li class="ogp-text-overflow" title="<%= item.display %> (<%= item.count %>)">
+            <label><input
+                type="checkbox"
+                value="<%= item.value %>"
+                name="<%= d.name %>[]"
+                <% if (_.contains(d.query, item.value)) {%>
+                    checked="checked"
+                <% } %>
+            />
+            <%= item.display %> (<%= item.count %>)</label>
+        </li>
+    <% }); %>
+</ul>

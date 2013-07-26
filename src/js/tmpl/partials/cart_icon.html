@@ -1,0 +1,11 @@
+<% if (d.DataType.toLowerCase() === "libraryrecord") { %>
+    <div class="result-icon ogp-external-link">
+        <a href="<%= d.location.libRecord %>" title="View in library catalog" target="_blank">
+            <img src="img/Icon_External_Link.png" />
+        </a>
+    </div>
+<% } else if (d.incart) { %>
+    <div class="result-icon ogp-cart-incart" title="Already in cart"></div>
+<% } else { %>
+    <div class="result-icon ogp-cart-add" title="Add to cart"></div>
+<% } %>

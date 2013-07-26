@@ -1,0 +1,23 @@
+<div class="ogp-row ogp-layer" data-layerid="<%= d.LayerId %>">
+
+    <div class="result-icon ogp-preview-remove" title="Remove from previewed layers"></div>
+
+    <div class="result-icon
+        <% if (d.wfsIsActive) { %>
+            ogp-control-wfs-active
+        <% } else { %>
+            ogp-control-wfs
+        <% } %>"
+        title="View feature info"></div>
+
+    <div class="result-icon ogp-control-zoom" title="Zoom to extent of layer"></div>
+
+    <div class="ogp-right ogp-preview-slider">
+        <div class="ogp-control-opacity"><div class="slider-line"></div><span>Opacity</span></div>
+    </div>
+
+    <div class="result-content ogp-text-overflow" title="<%= d.LayerDisplayName %>">
+        <%= d.LayerDisplayName %>
+    </div>
+
+</div>

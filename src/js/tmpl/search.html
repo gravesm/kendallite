@@ -1,0 +1,20 @@
+<div class="ogp-row ogp-layer
+    <% if (d.previewed) print('ogp-previewed')%>" data-layerid="<%= d.LayerId %>">
+
+    <%= d.partial("cart_icon") %>
+
+    <%= d.partial("preview") %>
+
+    <% if (d.DataType.toLowerCase() !== "libraryrecord") { %>
+        <div class="result-icon ogp-control-information" title="View layer information"></div>
+    <% } else { %>
+        <div class="result-icon ogp-right"></div>
+    <% } %>
+
+    <div class="result-icon ogp-control-zoom" title="Zoom to extent of layer"></div>
+
+    <div class="result-content ogp-text-overflow" title="<%= d.LayerDisplayName %>">
+        <%= d.LayerDisplayName %>
+    </div>
+
+</div>

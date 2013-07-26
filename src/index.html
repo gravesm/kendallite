@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OGP 2</title>
+
+        <link href="css/reset.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" />
+        <link rel="stylesheet" type="text/css" href="css/base.css" />
+
+        <script src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
+        <script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+        <script src="config.js"></script>
+        <!--<script>
+            var require = {
+                urlArgs: "build=1368816739531"
+            };
+        </script>-->
+        <script data-main="js/main" src="js/libs/require.js"></script>
+
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <div class="topnav">
+                    <button type="button" class="ogp-button" id="login">Log In</button>
+                </div>
+                <div class="ogp-searchform">
+                    <form id="search" method="get">
+                        <div class="ogp-search-div">
+                            <input name="s.keyword" type="text" placeholder="(Ex: Cambridge buildings)" /><button type="submit" class="ogp-button">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="content">
+                <div id="tabs" class="ogp-tab ogp-left">
+
+                    <ul>
+                        <li><a href="#results-tab">Results</a></li>
+                        <li>
+                            <a href="#cart-tab">
+                                <img src="img/cart.png" />
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="results-tab" class="ogp-tab">
+                        <div class="ogp-tab-header">
+                            <div class="ogp-left">
+                                <span class="ogp-results-total"></span>
+                            </div>
+                            <div class="ogp-right">
+                                <button type="button" id="previewedbox" class="ogp-button">Previewed Layers</button>
+                                <button type="button" id="solr-config" class="ogp-button">Configure Solr</button>
+                            </div>
+                        </div>
+                        <div class="ogp-tab-content">
+                            <div id="ogp-facets-wrap" class="ogp-left">
+                                <div class="facet-collapser">
+                                    <a title="Show facets panel" href="" class="facet-expand"><img src="img/resultset_next.png" /></a>
+                                    <a title="Hide facets panel" href="" class="facet-collapse"><img src="img/resultset_previous.png" /></a>
+                                </div>
+                                <div id="ogp-facets"></div>
+                            </div>
+                            <div id="ogp-results"></div>
+                        </div>
+                    </div>
+
+                    <div id="cart-tab" class="ogp-tab">
+                        <div class="ogp-tab-header">
+                            <div class="ogp-right">
+                                <button type="button" id="ogp-action-download" class="ogp-button">Download</button>
+                            </div>
+                        </div>
+                        <div id="ogp-cart" class="ogp-tab-content">
+                        </div>
+                    </div>
+
+                </div>
+                <div id="map-container" class="ogp-left">
+                    <div class="ogp-geocode-form">
+                        <form id="geocode" method="get">
+                            <div class="ogp-geocode-div">
+                                <input name="s.geolocate" type="text" placeholder="(Ex: Boston)" /><button type="submit" class="ogp-button">Zoom To</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ogp-layer-switcher"><button type="button" class="ogp-button">Base Layers</button><ul></ul></div>
+                    <div id="map"></div>
+                </div>
+            </div>
+            <div id="footer">
+                <a href="http://ist.mit.edu/" title="MIT IS&amp;T" class="ogp-right"><img src="img/ist_logo.png" /></a>
+                <a href="http://libraries.mit.edu/gis/" title="MIT GIS Services" class="ogp-right"><img src="img/library_logo.gif" /></a>
+            </div>
+        </div>
+        <div class="ogp-dialog" id="ogp-dialog-download" title="Select Download Format">Download</div>
+        <div class="ogp-dialog" id="ogp-dialog-previewed" title="Previewed Layers"></div>
+        <div class="ogp-dialog" id="solr-config-dialog" title="Configure Solr Search">
+            <fieldset>
+                <legend>Geographic components</legend>
+                <div class="row">
+                    <label>Area score: <input type="text" name="areascore" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>Center score: <input type="text" name="centerscore" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>Intersection score: <input type="text" name="intxscore" value="1" /></label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Term components</legend>
+                <div class="row">
+                    <label>LayerDisplayName: <input type="text" name="LayerDisplayName" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>LayerDisplayNameSynonyms: <input type="text" name="LayerDisplayNameSynonyms" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>Publisher: <input type="text" name="Publisher" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>Originator: <input type="text" name="Originator" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>Abstract: <input type="text" name="Abstract" value="0" /></label>
+                </div>
+                <div class="row">
+                    <label>PlaceKeywords: <input type="text" name="PlaceKeywords" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>PlaceKeywordsSynonyms: <input type="text" name="PlaceKeywordsSynonyms" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>ThemeKeywords: <input type="text" name="ThemeKeywords" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>ThemeKeywordsSynonymsIso: <input type="text" name="ThemeKeywordsSynonymsIso" value="1" /></label>
+                </div>
+                <div class="row">
+                    <label>ThemeKeywordsSynonymsLcsh: <input type="text" name="ThemeKeywordsSynonymsLcsh" value="1" /></label>
+                </div>
+            </fieldset>
+        </div>
+        <div class="ogp-dialog" id="ogp-iframe-login">
+            <iframe></iframe>
+        </div>
+        <div class="ogp-dialog" id="ogp-dialog-wfs"></div>
+        <iframe class="ogp-dialog" id="ogp-download-window"></iframe>
+        <div class="ogp-dialog" id="ogp-dialog-fgdc"></div>
+    </body>
+</html>
