@@ -10,11 +10,11 @@ define({
         Publisher: 1.0,
         Originator: 1.0,
         Abstract: 0,
-        PlaceKeywords: 1.0,
-        PlaceKeywordsSynonyms: 1.0,
-        ThemeKeywords: 1.0,
-        ThemeKeywordsSynonymsIso: 1.0,
-        ThemeKeywordsSynonymsLcsh: 1.0
+        PlaceKeywords: 2.5,
+        PlaceKeywordsSynonyms: 2.5,
+        ThemeKeywords: 2.5,
+        ThemeKeywordsSynonymsIso: 2.5,
+        ThemeKeywordsSynonymsLcsh: 2.5
     },
 
     auth: {

@@ -138,26 +138,6 @@ Backbone.Collection.prototype.setWhereIds = function(ids, attrs) {
 return {
     run: function() {
 
-        $("#solr-config").on("click", function() {
-            $("#solr-config-dialog").dialog({
-                buttons: {
-                    Update: function() {
-
-                        $(this).find("input[type='text']").each(function() {
-                            var value = $(this).val();
-                            var name = $(this).attr("name");
-
-                            if (!isNaN(parseFloat(value))) {
-                                Config.solr[name] = parseFloat(value);
-                            }
-                        });
-
-                        SearchController.search.call(SearchController);
-                    }
-                }
-            });
-        });
-
         $("#ogp-facets-wrap").on("click", ".facet-collapse", function() {
 
             $("#ogp-facets-wrap").animate({
