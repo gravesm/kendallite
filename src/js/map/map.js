@@ -16,7 +16,10 @@ var Map = function() {
 
         var opts = {
             div: "map",
-            projection: "EPSG:900913"
+            projection: "EPSG:900913",
+            controls: [
+                new OpenLayers.Control.Navigation({documentDrag: true})
+            ]
         };
 
         _.extend(opts, options);

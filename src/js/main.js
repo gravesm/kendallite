@@ -2,12 +2,10 @@
 require([
     'jquery',
     'app',
-    'jquery-ui'
+    'bootstrap'
 ], function($, App) {
 
 $(function() {
-
-    $("#tabs").tabs();
 
     App.run();
 

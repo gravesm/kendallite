@@ -2,10 +2,10 @@ var require = {
 
     paths: {
         'jquery': 'libs/jquery-1.9.1.min',
-        'jquery-ui': 'libs/jquery-ui-1.10.2.custom.min',
         'underscore': 'libs/underscore-min',
         'backbone': 'libs/backbone-min',
-        'text': 'libs/text'
+        'text': 'libs/text',
+        'bootstrap': 'libs/bootstrap.min'
     },
 
     shim: {
@@ -16,7 +16,9 @@ var require = {
         'underscore': {
             exports: "_"
         },
-        'jquery-ui': ['jquery']
+        'bootstrap': {
+            deps: ['jquery']
+        }
     },
 
     urlArgs: "bust=" + (new Date()).getTime()

@@ -34,6 +34,12 @@ define({
         DataTypeSort: "Data Type",
         PlaceKeywordsSort: "Place Keywords",
         ContentDate: "Date"
+    },
+
+    results: {
+        total: 0, // total number of results rendered in DOM (includes hidden results)
+        windowstart: 0, // number of first visible result in results buffer
+        windowsize: 0 // number of visible results
     }
 
 });

@@ -1,8 +1,9 @@
-<h4><%= d.display %></h4>
-<ul>
-    <% _.each(d.counts, function(item) { %>
-        <li class="ogp-text-overflow" title="<%= item.display %> (<%= item.count %>)">
-            <label><input
+<strong><%= d.display %></strong>
+<% for (var i=0; i<4 && i<d.counts.length; i++) { %>
+    <% var item = d.counts[i]; %>
+    <div class="checkbox">
+        <label>
+            <input
                 type="checkbox"
                 value="<%= item.value %>"
                 name="<%= d.name %>[]"
@@ -10,7 +11,10 @@
                     checked="checked"
                 <% } %>
             />
-            <%= item.display %> (<%= item.count %>)</label>
-        </li>
-    <% }); %>
-</ul>
+            <%= item.display %> (<%= item.count %>)
+        </label>
+    </div>
+<% } %>
+<% if (d.counts.length > 4) { %>
+    <div><a href="#<%= d.name %>" data-toggle="modal">More <%= d.display %></a></div>
+<% } %>

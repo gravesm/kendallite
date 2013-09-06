@@ -25,7 +25,7 @@ var methods = {
         defaults = {
             wt: "json",
             q: "*:*",
-            rows: 20,
+            rows: Config.results.windowsize || 15,
             facet: true,
             "facet.field": [
                 "{!ex=inst}InstitutionSort",

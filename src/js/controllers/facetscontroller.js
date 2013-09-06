@@ -8,7 +8,7 @@ define([
 
 var FacetsView = Backbone.View.extend({
 
-    el: $("#ogp-facets"),
+    el: $("#facets"),
 
     initialize: function() {
 
@@ -19,6 +19,7 @@ var FacetsView = Backbone.View.extend({
     refresh: function() {
 
         this.$el.empty();
+        $("#facet-dialogs").empty();
         Facets.each(this.renderView, this);
 
     },
@@ -30,6 +31,15 @@ var FacetsView = Backbone.View.extend({
         });
 
         this.$el.append(view.render().el);
+
+        var dview = new FacetView({
+            model: facet,
+            className: "modal fade",
+            id: facet.get("name"),
+            dialog: true
+        });
+
+        $("#facet-dialogs").append(dview.render().el);
 
     }
 

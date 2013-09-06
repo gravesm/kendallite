@@ -4,18 +4,17 @@ define([
     'backbone',
     'underscore',
     'collections/resultscollection',
-    'collections/cartcollection',
-    'collections/previewcollection',
     'models/query',
-    'views/item'
-], function($, Backbone, _, Results, Cart, Previewed, Query, ItemView) {
+    'views/item',
+    'appconfig'
+], function($, Backbone, _, Results, Query, ItemView, Config) {
 
 /**
  * Handles interaction in the results tab.
  */
 var ResultsView = Backbone.View.extend({
 
-    el: $("#ogp-results"),
+    el: $("#results"),
 
     initialize: function() {
 
@@ -31,39 +30,22 @@ var ResultsView = Backbone.View.extend({
     /**
      * Removes the current list of results from the DOM and reloads the contents
      * of the Results collection.
-     *
-     * Additionally, this makes sure that models are shared across the Cart and
-     * Previewed collections by replacing the model instances in the Results
-     * with any matching models in the other collections. Reusing the models
-     * makes it much easier to maintain the state of the model between various
-     * collections.
      */
     addResult: function(item) {
 
-        var idx, cart, previewed;
-
-        if (!this.$el.find("#pagination").length) {
-            this.$el.append("<div id='pagination' style='text-align: center'><a href='#'>(show more)</a></div>");
-        }
-
-        if (Query.get("start") + 20 < Query.get("total")) {
-            this.$el.find("#pagination").show();
+        if (Query.get("start") > 0) {
+            $(".previous").css("visibility", "visible");
         } else {
-            this.$el.find("#pagination").hide();
+            $(".previous").css("visibility", "hidden");
         }
 
-        idx = Results.indexOf(item);
-        cart = Cart.get(item.id);
-        previewed = Previewed.get(item.id);
+        if (Query.get("start") + Config.results.windowsize < Query.get("total")) {
+            $(".next").css("visibility", "visible");
+        } else {
+            $(".next").css("visibility", "hidden");
+        }
 
-        _.each([cart, previewed], function(model) {
-            if (model) {
-                Results.remove(model, {silent: true});
-                Results.add(model, {at: idx, silent: true});
-            }
-        });
-
-        this.renderView(Results.at(idx));
+        this.renderView(item);
 
     },
 
@@ -94,7 +76,7 @@ var ResultsView = Backbone.View.extend({
             template: "search"
         });
 
-        this.$el.find("#pagination").before(view.render().el);
+        this.$el.append(view.render().el);
 
     }
 

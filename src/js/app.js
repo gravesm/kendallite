@@ -7,23 +7,21 @@ define([
     'map/map',
     'appconfig',
     'models/query',
-    'controllers/previewcontroller',
-    'controllers/cartcontroller',
     'controllers/logincontroller',
     'controllers/resultscontroller',
     'controllers/facetscontroller'
-], function($, _, Backbone, SearchController, Map, Config, Query, PreviewController) {
+], function($, _, Backbone, SearchController, Map, Config, Query) {
 
 var App = Backbone.View.extend({
 
     el: $("body"),
 
     events: {
-        "submit #search": "setKeyword",
+        "submit #search-form": "setKeyword",
         "submit #geocode": "geocode",
         "click #pagination a": "setPage",
-        "click #solr-config button": _.bind(SearchController.search, SearchController),
-        "click #previewedbox": _.bind(PreviewController.show, PreviewController)
+        "click .previous a": "previousPage",
+        "click .next a": "nextPage"
     },
 
     initialize: function() {
@@ -37,11 +35,35 @@ var App = Backbone.View.extend({
         });
     },
 
+    nextPage: function(ev) {
+
+        ev.preventDefault();
+
+        $(".results-mask").show();
+
+        var start = Query.get("start") || 0;
+
+        Query.set("start", start + Config.results.windowsize);
+
+    },
+
+    previousPage: function(ev) {
+
+        ev.preventDefault();
+
+        $(".results-mask").show();
+
+        var start = Query.get("start");
+
+        Query.set("start", start - Config.results.windowsize);
+
+    },
+
     setKeyword: function(ev) {
 
         ev.preventDefault();
 
-        var keyword = $(ev.currentTarget).find("input[name='s.keyword']").val();
+        var keyword = $(ev.currentTarget).find("input[name='keyword']").val();
 
         Query.set({
             start: 0,
@@ -62,16 +84,6 @@ var App = Backbone.View.extend({
             start: 0,
             bounds: bounds
         });
-
-    },
-
-    setPage: function(ev) {
-
-        ev.preventDefault();
-
-        var start = Query.get("start") || 0;
-
-        Query.set("start", start + 20);
 
     },
 
@@ -138,30 +150,58 @@ Backbone.Collection.prototype.setWhereIds = function(ids, attrs) {
 return {
     run: function() {
 
-        $("#ogp-facets-wrap").on("click", ".facet-collapse", function() {
+        function resizeResults() {
 
-            $("#ogp-facets-wrap").animate({
-                width: "30px"
-            }, {
-                duration: 200,
-                queue: false
-            });
-            $("#ogp-facets").toggle(400);
-            $(".facet-collapse, .facet-expand").toggle();
+            /**
+             * Maximum height of search results div.
+             */
+            var resultsHeight =
+                $(window).height() -
+                $(".search-results").offset().top -
+                30
+            ;
+
+            var innerHeight = resultsHeight - (resultsHeight % 30);
+
+            Config.results.windowsize = innerHeight / 30;
+
+            $(".search-results").css("max-height", innerHeight + "px");
+
+        }
+
+        resizeResults();
+
+        $(window).on("resize", resizeResults);
+
+        $("#search").hover(
+            function() {
+                $(".search-nav").fadeTo(200, 0.95);
+            },
+            function() {
+                $(".search-nav").fadeTo(200, 0.0);
+            }
+        );
+
+        $("#filters-button").on("click", function() {
+
+            $("#filters").toggle(300, resizeResults);
+
             return false;
-        }).on("click", ".facet-expand", function() {
-            $("#ogp-facets-wrap").animate({
-                width: "40%"
-            }, {
-                duration: 200,
-                queue: false
-            });
-            $("#ogp-facets").toggle(100);
-            $(".facet-collapse, .facet-expand").toggle();
-            return false;
+
+        });
+
+        $(".right-btn").on("click", "a", function(ev) {
+            ev.preventDefault();
+
+            $("#layers-box").css({
+                opacity: 0.0,
+                visibility: "visible"
+            }).fadeTo(200, 1.0);
+
         });
 
         return new App();
+
     }
 };
 

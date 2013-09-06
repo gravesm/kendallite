@@ -4,8 +4,9 @@ define([
     'underscore',
     'backbone',
     'text!tmpl/facet.html',
+    'text!tmpl/facet-dialog.html',
     'models/query'
-], function($, _, Backbone, FacetTmpl, Query) {
+], function($, _, Backbone, FacetTmpl, DialogTmpl, Query) {
 
 _.templateSettings.variable = "d";
 
@@ -13,13 +14,17 @@ var FacetView = Backbone.View.extend({
 
     tagName: "div",
 
+    className: "col-md-3",
+
     events: {
         "change input": "select"
     },
 
-    initialize: function() {
+    initialize: function(options) {
 
-        this.template = _.template(FacetTmpl);
+        var tmpl = options.dialog ? DialogTmpl : FacetTmpl;
+
+        this.template = _.template(tmpl);
 
     },
 

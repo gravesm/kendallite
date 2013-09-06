@@ -29,6 +29,8 @@ var SearchController = Backbone.View.extend({
 
         var geosearch, q;
 
+        $(".results-mask").show();
+
         geosearch = new OGP({
             bounds: Query.get("bounds"),
             terms: Query.get("keyword"),
@@ -53,15 +55,11 @@ var SearchController = Backbone.View.extend({
                     silent: true
             });
 
-            $("#results-tab .ogp-results-total").text(data.total + " total results");
+            Results.reset();
+            Results.add(data.results);
+            Facets.reset(data.facets);
 
-            if (data.start == 0) {
-                Results.reset();
-                Results.add(data.results);
-                Facets.reset(data.facets);
-            } else {
-                Results.add(data.results);
-            }
+            $(".results-mask").hide();
 
         });
 
