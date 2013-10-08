@@ -46,9 +46,9 @@ define(['solr/reader'], function(Reader) {
             };
 
             expect(reader.normalizeFacets(data)).toEqual([
-                {name: "frobbers", display: "frobbers", counts: "tacocat"},
-                {name: "whatnots", display: "whatnots", counts: "tacocat"},
-                {name: "foodads", display: "foodads", counts: "birdrib"}
+                {name: "frobbers", counts: "tacocat"},
+                {name: "whatnots", counts: "tacocat"},
+                {name: "foodads", counts: "birdrib"}
             ]);
 
         });

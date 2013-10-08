@@ -1,4 +1,3 @@
-
 module.exports = function(grunt) {
 
     grunt.initConfig({
@@ -17,7 +16,6 @@ module.exports = function(grunt) {
             requirejs: {
                 options: {
                     specs: "spec/*.spec.js",
-                    helpers: "spec/setup.js",
                     vendor: [
                         'src/js/libs/jquery-1.9.1.min.js',
                         'src/js/libs/underscore-min.js'
@@ -27,11 +25,7 @@ module.exports = function(grunt) {
                     templateOptions: {
                         requireConfigFile: "src/config.js",
                         requireConfig: {
-                            baseUrl: "src/js",
-                            paths: {
-                                "fixtures": "../../spec/fixtures",
-                                "stubit": "../../spec/stubit"
-                            }
+                            baseUrl: "src/js"
                         }
                     }
                 }

@@ -1,20 +1,13 @@
+define(['solr/ogprequest', 'appconfig'], function(OGP, Cfg) {
 
-define(['stubit'], function(Stubit) {
-
-    var OGP, Config, bounds;
+    var bounds, ogp;
 
     return describe("OgpRequest", function() {
 
         beforeEach(function() {
 
-            load = Stubit(
-                ['appconfig', ['solr']]
-            );
-
-            load(['solr/ogprequest', 'appconfig'], function(ogp, config) {
-                OGP = ogp;
-                Config = config;
-            });
+            ogp = new OGP();
+            ogp.options = {};
 
             bounds = jasmine.createSpyObj('bounds',
                 ['toGeometry', 'getArea', 'getCenterLonLat']);
@@ -22,45 +15,50 @@ define(['stubit'], function(Stubit) {
             bounds.toGeometry.andReturn(bounds);
             bounds.getCenterLonLat.andReturn({lon: 49.96178, lat: 15.28811});
 
+            ogp.options.bounds = bounds;
+
         });
 
-        it("creates an object of search params", function() {
+        it("sets the query fields parameter", function() {
+            Cfg.solr.LayerDisplayName = 70;
+            Cfg.solr.Publisher = 71;
+            Cfg.solr.Originator = 72;
+            Cfg.solr.Abstract = 73;
+            Cfg.solr.PlaceKeywords = 74;
 
-            Config.solr = {
-                areascore: 1,
-                centerscore: 2,
-                intxscore: 3,
-                LayerDisplayName: 4,
-                Publisher: 5,
-                Originator: 6,
-                Abstract: 7,
-                PlaceKeywords: 8
-            };
+            expect(ogp.getSearchParams().qf).toEqual(
+                "LayerDisplayName^70 Publisher^71 Originator^72 Abstract^73 PlaceKeywords^74");
+        });
 
-            var ogp = new OGP({
-                bounds: bounds,
-                terms: "Rihannalicious"
-            });
+        it("sets the query parameter", function() {
+            ogp.options.terms = "Whippleburr";
+            expect(ogp.getSearchParams().q).toEqual("Whippleburr");
+        });
 
-            spyOn(ogp, "getFilters").andReturn(['sic', 'semper', 'tyrannis']);
-            spyOn(ogp, "intersection").andReturn("sure, it does");
-            spyOn(ogp, "areaRelevancy").andReturn("not even close");
-            spyOn(ogp, "centerRelevancy").andReturn("sometimes");
+        it("sets the boost function parameter", function() {
+            spyOn(ogp, "areaRelevancy").andReturn("BubbleCrumb");
+            spyOn(ogp, "centerRelevancy").andReturn("BibbleTumb");
+            Cfg.solr.areascore = 10;
+            Cfg.solr.centerscore = 15;
+            Cfg.solr.intxscore = 20;
 
-            var params = ogp.getSearchParams();
-
-            expect(params.qf).toEqual(
-                "LayerDisplayName^4 Publisher^5 Originator^6 Abstract^7 PlaceKeywords^8");
-            expect(params.q).toEqual("Rihannalicious");
-            expect(params.bf).toEqual([
-                'not even close^1',
-                'sometimes^2',
-                'div($intx,$union)^3'
+            expect(ogp.getSearchParams().bf).toEqual([
+                'BubbleCrumb^10', 'BibbleTumb^15', 'div($intx,$union)^20'
             ]);
-            expect(params.fq).toEqual(['sic', 'semper', 'tyrannis']);
-            expect(params.intx).toEqual("sure, it does");
-            expect(params.union).toEqual(23);
+        });
 
+        it("sets the filter query parameter", function() {
+            spyOn(ogp, "getFilters").andReturn(['sic', 'semper', 'tyrannis']);
+            expect(ogp.getSearchParams().fq).toEqual(['sic', 'semper', 'tyrannis']);
+        });
+
+        it("sets the intersection parameter", function() {
+            spyOn(ogp, "intersection").andReturn("Thumblestuff");
+            expect(ogp.getSearchParams().intx).toEqual("Thumblestuff");
+        });
+
+        it("sets the union parameter", function() {
+            expect(ogp.getSearchParams().union).toEqual(23);
         });
 
         it("creates an array of filters", function() {
@@ -90,12 +88,12 @@ define(['stubit'], function(Stubit) {
 
             it("for datatype filter", function() {
                 expect(ogp.datatypeFilter(['foo', 'bar', 'baz'])).toEqual(
-                    "{!tag=dt}DataType:foo OR DataType:bar OR DataType:baz");
+                    '{!tag=dt}DataTypeSort:("foo" OR "bar" OR "baz")');
             });
 
             it("for institution filter", function() {
                 expect(ogp.institutionFilter(['Truffletown', 'Bugwumpus'])).toEqual(
-                    "{!tag=inst}Institution:Truffletown OR Institution:Bugwumpus");
+                    '{!tag=inst}InstitutionSort:("Truffletown" OR "Bugwumpus")');
             });
 
             it("for places filter", function() {

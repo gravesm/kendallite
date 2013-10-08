@@ -1,4 +1,3 @@
-
 define(['jquery', 'solr/solr'], function($, Solr) {
 
     return describe("Solr", function() {
