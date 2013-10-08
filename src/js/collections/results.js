@@ -3,12 +3,10 @@ define([
     'models/item'
 ], function(Backbone, Item) {
 
-var Cart = Backbone.Collection.extend({
+return Backbone.Collection.extend({
 
     model: Item
 
 });
-
-return new Cart();
 
 });

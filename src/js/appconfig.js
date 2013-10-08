@@ -1,4 +1,3 @@
-
 define({
 
     solr: {
@@ -29,17 +28,11 @@ define({
         solr: "http://localhost/solr/"
     },
 
-    facets: {
-        InstitutionSort: "Institutions",
-        DataTypeSort: "Data Type",
-        PlaceKeywordsSort: "Place Keywords",
-        ContentDate: "Date"
-    },
-
+    /* Used internally. Do not change. */
     results: {
-        total: 0, // total number of results rendered in DOM (includes hidden results)
+        total: 0,       // total number of results rendered in DOM (includes hidden results)
         windowstart: 0, // number of first visible result in results buffer
-        windowsize: 0 // number of visible results
+        windowsize: 0   // number of visible results
     }
 
 });

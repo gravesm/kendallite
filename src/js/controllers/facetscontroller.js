@@ -1,50 +1,60 @@
-
 define([
     'jquery',
     'backbone',
-    'collections/facetscollection',
-    'views/facet'
-], function($, Backbone, Facets, FacetView) {
+    'underscore',
+    'views/facetitem',
+    'models/query'
+], function($, Backbone, _, FacetView, Query) {
 
-var FacetsView = Backbone.View.extend({
+    return Backbone.View.extend({
 
-    el: $("#facets"),
+        initialize: function() {
+            this.model.items.on("reset", this.refresh, this);
+            this.$dialog = this.options.dialog.find('.modal-body');
+        },
 
-    initialize: function() {
+        refresh: function(collection, opts) {
 
-        this.listenTo(Facets, "reset", this.refresh);
+            var name = this.model.get("name");
 
-    },
+            collection.each(function(item) {
+                if (_.contains(Query.get(name), item.get("value"))) {
+                    item.set("selected", true);
+                }
+            });
 
-    refresh: function() {
+            collection.sort();
 
-        this.$el.empty();
-        $("#facet-dialogs").empty();
-        Facets.each(this.renderView, this);
+            this.$el.empty();
+            this.$dialog.empty();
 
-    },
+            _.each(collection.slice(0,4), this.renderView, this);
 
-    renderView: function(facet) {
+            collection.each(this.renderDialog, this);
 
-        var view = new FacetView({
-            model: facet
-        });
+        },
 
-        this.$el.append(view.render().el);
+        renderView: function(facet) {
 
-        var dview = new FacetView({
-            model: facet,
-            className: "modal fade",
-            id: facet.get("name"),
-            dialog: true
-        });
+            var view = new FacetView({
+                model: facet,
+                facet: this.model.get("name")
+            });
 
-        $("#facet-dialogs").append(dview.render().el);
+            this.$el.append(view.render().el);
 
-    }
+        },
 
-});
+        renderDialog: function(facet) {
 
-return new FacetsView();
+            var view = new FacetView({
+                model: facet,
+                facet: this.model.get("name")
+            });
+
+            this.$dialog.append(view.render().el);
+        }
+
+    });
 
 });

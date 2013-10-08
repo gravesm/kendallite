@@ -1,13 +1,11 @@
-
 define([
     'jquery',
     'backbone',
     'underscore',
-    'collections/resultscollection',
     'models/query',
     'views/item',
     'appconfig'
-], function($, Backbone, _, Results, Query, ItemView, Config) {
+], function($, Backbone, _, Query, ItemView, Config) {
 
 /**
  * Handles interaction in the results tab.
@@ -16,22 +14,7 @@ var ResultsView = Backbone.View.extend({
 
     el: $("#results"),
 
-    initialize: function() {
-
-        this.listenTo(Results, "reset", this.empty);
-        this.listenTo(Results, "add", this.addResult);
-
-    },
-
-    empty: function() {
-        this.$el.empty();
-    },
-
-    /**
-     * Removes the current list of results from the DOM and reloads the contents
-     * of the Results collection.
-     */
-    addResult: function(item) {
+    reload: function(collection, opts) {
 
         if (Query.get("start") > 0) {
             $(".previous").css("visibility", "visible");
@@ -45,24 +28,9 @@ var ResultsView = Backbone.View.extend({
             $(".next").css("visibility", "hidden");
         }
 
-        this.renderView(item);
+        this.$el.empty();
 
-    },
-
-    /**
-     * Reloads list of results.
-     *
-     * Generally, this shouldn't be necessary to call since each result item
-     * will re-render itself when something updates. This is called by the login
-     * controller since the login process does not change item data, but rather
-     * user data.
-     */
-    refresh: function() {
-
-        Results.each(function(item) {
-            item.trigger("change");
-        });
-
+        collection.each(this.renderView, this);
     },
 
     /**
@@ -72,8 +40,7 @@ var ResultsView = Backbone.View.extend({
     renderView: function(item) {
 
         var view = new ItemView({
-            model: item,
-            template: "search"
+            model: item
         });
 
         this.$el.append(view.render().el);

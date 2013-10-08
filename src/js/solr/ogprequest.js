@@ -1,4 +1,3 @@
-
 define([
     'jquery',
     'underscore',
@@ -98,16 +97,13 @@ var methods = {
      */
     datatypeFilter: function(datatypes) {
 
-        var dtf, i,
-            dt = datatypes.slice(0);
+        var dt = datatypes.slice(0);
 
-        for (i=0; i<dt.length; i++) {
-            dt[i] = "DataType:" + dt[i];
-        }
+        _.each(dt, function(val, idx) {
+            dt[idx] = '"' + val + '"';
+        });
 
-        dtf = dt.join(" OR ");
-
-        return "{!tag=dt}" + dtf;
+        return "{!tag=dt}DataTypeSort:(" + dt.join(" OR ") + ")";
 
     },
 
@@ -120,16 +116,13 @@ var methods = {
      */
     institutionFilter: function(institutions) {
 
-        var instf, i,
-            inst = institutions.slice(0);
+        var inst = institutions.slice(0);
 
-        for (i=0; i<inst.length; i++) {
-            inst[i] = "Institution:" + inst[i];
-        }
+        _.each(inst, function(val, idx) {
+            inst[idx] = '"' + val + '"';
+        });
 
-        instf = inst.join(" OR ");
-
-        return "{!tag=inst}" + instf;
+        return "{!tag=inst}InstitutionSort:(" + inst.join(" OR ") + ")";
 
     },
 

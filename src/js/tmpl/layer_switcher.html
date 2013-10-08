@@ -1,8 +1,5 @@
 <li>
-    <input type="radio" name="base_layer" id="<%= d.id %>" value="<%= d.id %>"
-        <% if (d.visibility) { %>
-            checked="checked"
-        <% } %>
-    />
-    <label for="<%= d.id %>"><%= d.name %></label>
+    <a href="#" data-layerid="<%= o.id %>">
+        <%= o.name %>
+    </a>
 </li>

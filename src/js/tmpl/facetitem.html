@@ -1,0 +1,8 @@
+<label>
+    <input type="checkbox" name="<%= o.facet %>[]" value="<%= o.value %>"
+        <% if (o.selected) { %>
+            checked="checked"
+        <% } %>
+    />
+    <%= o.display %> (<%= o.count %>)
+</label>

@@ -1,14 +1,9 @@
-
 define([
-    'jquery',
     'underscore',
     'backbone',
-    'tmpl/template',
-    'models/user',
-    'map/map',
-    'appconfig',
-    'text!tmpl/FGDC_V2_a.xsl'
-], function($, _, Backbone, Template, user, Map, Config, XSL) {
+    'text!tmpl/item.html',
+    'map/map'
+], function(_, Backbone, Tmpl, Map) {
 
 var ItemView = Backbone.View.extend({
 
@@ -22,30 +17,23 @@ var ItemView = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.template = Template(options.template) || Template("search");
+
+        this.template = _.template(Tmpl);
         this.listenTo(this.model, "change", this.render);
-        this.listenTo(this.model, "remove", this.itemRemoved);
+
     },
 
     render: function() {
 
         var data = this.model.toJSON();
 
-        try {
-            data.location = $.parseJSON(data.Location);
-        } catch (e) {
-            data.location = {};
-        }
-
-        this.$el.html( this.template( _.extend(data, user) ) );
+        this.$el.html( this.template(data) );
 
         return this;
 
     },
 
     mouseenter: function(ev) {
-
-        this.$el.addClass("result-highlight");
 
         var l, b, r, t;
 
@@ -60,14 +48,8 @@ var ItemView = Backbone.View.extend({
 
     mouseleave: function(ev) {
 
-        this.$el.removeClass("result-highlight");
-
         Map.removePreviewBoxes();
 
-    },
-
-    itemRemoved: function() {
-        Map.removePreviewBoxes();
     },
 
     zoom: function() {

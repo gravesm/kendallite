@@ -1,4 +1,3 @@
-
 define([
     'jquery',
     'appconfig',
@@ -39,6 +38,7 @@ var methods = {
             "facet.range.end": "NOW",
             "facet.range.gap": "+10YEAR",
             "facet.range.other": "before",
+            sort: "score desc, LayerDisplayName asc",
             start: 0,
             defType: "edismax",
             fl: "Access,Area,CenterX,CenterY,DataType,DataTypeSort,HalfHeight,HalfWidth,Institution,InstitutionSort,LayerDisplayName,LayerId,Location,MaxX,MaxY,MinX,MinY,Name,WorkspaceName"
@@ -61,7 +61,7 @@ var methods = {
      * @param  {Object} dfd jQuery deferred
      * @return {Object}     jQuery deferred
      */
-    run: function(dfd) {
+    run: function(dfd, context) {
 
         var ajax, read;
 
@@ -70,7 +70,7 @@ var methods = {
         reader = this.reader;
 
         ajax.done(function(data) {
-            dfd.resolve(reader.read(data));
+            dfd.resolveWith(context, [reader.read(data)]);
         });
 
         return ajax;

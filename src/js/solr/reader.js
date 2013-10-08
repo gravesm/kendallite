@@ -1,7 +1,6 @@
 define([
-    'underscore',
-    'appconfig'
-], function(_, Config) {
+    'underscore'
+], function(_) {
 
     var IndexReader = function() {};
 
@@ -28,7 +27,6 @@ define([
 
                 var facet = {
                     name: facetname,
-                    display: Config.facets[facetname] || facetname,
                     counts: this.prepareFieldCounts(counts)
                 };
 
@@ -40,7 +38,6 @@ define([
 
                 var facet = {
                     name: facetname,
-                    display: Config.facets[facetname] || facetname,
                     counts: this.prepareDateCounts(counts)
                 };
 
