@@ -1,11 +1,6 @@
-from handlers import (WFSHandler, LayerMetadataHandler, fgdc_xml, fgdc_html)
+from handlers import (WFSHandler, LayerMetadataHandler,)
 
 urls = [
     (r'/wfs', WFSHandler),
-    (r'/layer/([^/]+)/about/?', LayerMetadataHandler, dict(
-        formatters={
-            'text/xml': fgdc_xml,
-            '*/*': fgdc_html,
-        }
-    )),
+    (r'/layer/([^/]+)/?', LayerMetadataHandler),
 ]

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block head_content %}
+    <script src="/static/underscore-min.js"></script>
+    <script>
+        $(function() {
+            var opts = {
+                div: "map",
+                projection: "EPSG:900913",
+                controls: [
+                    new OpenLayers.Control.Navigation({documentDrag: true})
+                ]
+            };
+            map = new OpenLayers.Map(opts);
+
+            var wms = new OpenLayers.Layer.WMS('{{ layer.name }}', [
+                {% for loc in layer.location['wms'] %}
+                    '{{ loc }}'
+                {% end %}
+                ], {
+                    layers: '{{ layer.layer_name }}',
+                    format: "image/png",
+                    tiled: true,
+                    exceptions: "application/vnd.ogc.se_inxml",
+                    transparent: true
+                }, {
+                    transitionEffect: "resize",
+                    opacity: 1
+                }
+            );
+
+            wms.events.register("loadstart", wms, function() {
+                $(".map-overlay").show().animate({
+                    opacity: 0.5
+                }, 300);
+            });
+
+            wms.events.register("loadend", wms, function() {
+                $(".map-overlay").animate({
+                    opacity: 0
+                }, 300, function() {
+                    $(this).hide();
+                });
+            });
+
+            var bounds = OpenLayers.Geometry.fromWKT('{{ layer.wkt }}').getBounds();
+            bounds.transform("EPSG:4326", "EPSG:900913");
+
+            map.addLayer(wms);
+
+            wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
+                url: 'http://localhost:8888/wfs',
+                layers: [wms],
+                layerUrls: wms.url,
+                infoFormat: 'application/vnd.ogc.gml',
+                vendorParams: {
+                    OGPID: '{{ layer.id }}'
+                }
+            });
+
+            var tmpl = _.template($("#feature-tmpl").html());
+
+            wfs_control.events.register("getfeatureinfo", this, function(ev) {
+                $("#features-content").empty();
+                _.each(ev.features, function(feature) {
+                    $("#features-content").append(tmpl(feature));
+                });
+                $("#features-dialog").modal();
+            });
+
+            map.addControl(wfs_control);
+
+            map.addLayers([
+                new OpenLayers.Layer.Google("Google Physical", {
+                    type: google.maps.MapTypeId.TERRAIN
+                }),
+                new OpenLayers.Layer.Google("Google Streets"),
+                new OpenLayers.Layer.Google("Google Hybrid", {
+                    type: google.maps.MapTypeId.HYBRID
+                }),
+                new OpenLayers.Layer.Google("Google Satellite", {
+                    type: google.maps.MapTypeId.SATELLITE
+                })
+            ]);
+
+            wfs_control.activate();
+
+            map.zoomToExtent(bounds);
+
+            $("#zoom-to-layer").on("click", function(ev) {
+                ev.preventDefault();
+                map.zoomToExtent(bounds);
+            });
+
+            var tmpl = _.template($("#layer-switcher").html());
+
+            _.each(map.layers, function(layer) {
+                if (layer.isBaseLayer) {
+                    $(".map-layers").append(tmpl(layer));
+                }
+            });
+
+            $(".map-layers").on("click", "a", function(ev) {
+                ev.preventDefault();
+                map.setBaseLayer(map.getLayer($(this).data("layerid")));
+            });
+        });
+    </script>
+    <script type="text/x-template" id="layer-switcher">
+        <li>
+            <a href="#" data-layerid="<%= id %>">
+                <%= name %>
+            </a>
+        </li>
+    </script>
+{% end %}
+
+{% block map_nav %}
+    <button class="btn btn-default btn-sm" type="button" title="Zoom to extent of layer"
+        id="zoom-to-layer">
+        <span class="icon">z</span>
+    </button>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm"
+            data-toggle="dropdown">
+            Base layers <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu map-layers"></ul>
+    </div>
+    <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm"
+            data-toggle="dropdown">
+            Download as <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
+            <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
+        </ul>
+    </div>
+{% end %}
+
+{% block metadata %}
+    {% raw fgdc %}
+{% end %}

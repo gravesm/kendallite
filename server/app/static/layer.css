@@ -1,0 +1,60 @@
+.metadata-detail dl {
+    /*border-left: 1px solid #ddd;*/
+    margin-left: 15px;
+    padding-left: 10px;
+}
+
+.map-nav {
+    margin-bottom: 10px;
+}
+
+.layer-info dd {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+#map {
+    border: 1px solid #ddd;
+    height: 400px;
+    min-width: 500px;
+    position: relative;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0;
+    background-color: #000;
+    opacity: 0;
+    z-index: 2;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    display: none;
+}
+
+h3 {
+    border-bottom: 1px solid #eee;
+}
+
+h4 {
+    margin-left: 10px;
+}
+
+h5 {
+    border-bottom: 1px solid #ddd;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 10px;
+}
+
+section {
+    margin-left: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+section > div {
+    padding: 10px;
+}

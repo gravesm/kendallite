@@ -24,10 +24,17 @@ class Solr(object):
     @gen.coroutine
     def get(self, cls, id):
         http = AsyncHTTPClient()
+
+        fields = (
+            'Access', 'Location', 'LayerDisplayName', 'FgdcText', 'PlaceKeywords',
+            'ThemeKeywords', 'Institution', 'Name', 'WorkspaceName', 'LayerId',
+            'MaxX', 'MaxY', 'MinX', 'MinY', 'DataType'
+        )
+
         params = {
             'q': 'LayerId:{0}'.format(id),
             'wt': 'json',
-            'fl': 'Access,Location',
+            'fl': (',').join(fields),
             'rows': 1
         }
         url = "{0}/select/".format(self.url.rstrip("/"))

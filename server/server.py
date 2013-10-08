@@ -20,7 +20,8 @@ if __name__ == "__main__":
 
     core.settings.STORAGE_ENGINE = engine.ENGINE
 
-    application = Application(routes.urls, debug=True)
+    application = Application(routes.urls, debug=True, template_path='app/templates/',
+        static_path='app/static')
 
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()

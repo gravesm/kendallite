@@ -1,7 +1,9 @@
 from tornado.web import RequestHandler
 from tornado.httpclient import AsyncHTTPClient
 from tornado import gen
-from core.request import NegotiatedRequestHandler, authenticated, negotiate
+from core.request import authenticated
+from core import transformer
+from lxml import etree
 from app.layer import Layer
 from app import settings
 
@@ -39,24 +41,36 @@ class WFSHandler(RequestHandler):
         return settings.WFS_SECURE_URL
 
 
-class LayerMetadataHandler(NegotiatedRequestHandler):
+class LayerMetadataHandler(RequestHandler):
 
-    def initialize(self):
-        self.solr = pysolr.Solr(settings.SOLR_URL)
-
-    @negotiate
+    @gen.coroutine
     def get(self, layerid):
-        # fetch FGDC data from Solr
-        pass
 
+        layer = yield Layer.get(layerid)
 
-def fgdc_xml(request, response):
-    request.set_header("Content-type", "text/xml; charset=utf-8")
-    request.write(response)
-    request.finish()
+        if layer.is_vector or layer.is_raster:
 
+            if layer.is_vector:
+                template = 'vector.html'
+            else:
+                template = 'raster.html'
 
-def fgdc_html(request, response):
-    request.set_header("Content-type", "text/html; charset=utf-8")
-    request.write(response)
-    request.finish()
+            html = self._transform(layer.fgdc, transformer.fgdc_transform)
+
+            kwargs = {
+                'layer': layer,
+                'fgdc': html,
+            }
+
+        else:
+            template = 'nongeo.html'
+
+            kwargs = {
+                'layer': layer
+            }
+
+        self.render(template, **kwargs)
+
+    def _transform(self, xml, transform):
+        root = etree.XML(xml.strip().encode('utf-8'))
+        return transform(root)
