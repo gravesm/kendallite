@@ -1,4 +1,4 @@
-from core import settings
+from kendallite.core import settings
 from tornado import gen
 
 class DocBase(type):

@@ -1,11 +1,11 @@
 from tornado.web import RequestHandler
 from tornado.httpclient import AsyncHTTPClient
 from tornado import gen
-from core.request import authenticated
-from core import transformer
+from kendallite.core.request import authenticated
+from kendallite.core import transformer
 from lxml import etree
-from app.layer import Layer
-from app import settings
+from ogp.layer import Layer
+from ogp import settings
 
 class WFSHandler(RequestHandler):
 

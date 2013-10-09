@@ -15,8 +15,8 @@ NON_PROXIED_HOSTS = (
 
 SOLR_URL = 'http://localhost/solr/'
 
-URLS = 'app.routes'
+URLS = 'ogp.routes'
 
-STORAGE_ENGINE = 'core.storage.solr'
+STORAGE_ENGINE = 'kendallite.core.storage.solr'
 
-FGDC_XSL = '/home/gravm/git/kendallite/server/app/fgdc.xsl'
+FGDC_XSL = '/home/gravm/git/kendallite/ogp/fgdc.xsl'

@@ -2,7 +2,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.httputil import url_concat
 import json
 from tornado import gen
-from core import settings
+from kendallite.core import settings
 
 class Solr(object):
 

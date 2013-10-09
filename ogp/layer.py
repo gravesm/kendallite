@@ -1,5 +1,5 @@
-from core.storage import base
-from core.storage import fields
+from kendallite.core.storage import base
+from kendallite.core.storage import fields
 
 class Layer(base.Doc):
 
