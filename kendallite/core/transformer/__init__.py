@@ -1,11 +1,10 @@
 from lxml import etree
 import StringIO
-import kendallite.core.settings
-
+from kendallite.conf import settings
 
 def _get_transform():
     """Returns an FGDC XSLT transformer."""
-    with open(kendallite.core.settings.FGDC_XSL, 'r') as fp:
+    with open(settings.FGDC_XSL, 'r') as fp:
         f = StringIO.StringIO(fp.read())
 
         xslt = etree.parse(f)
