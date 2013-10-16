@@ -33,6 +33,10 @@ class Layer(base.Doc):
         return self.datatype.lower() in ('paper map', 'raster',)
 
     @property
+    def is_restricted(self):
+        return self.access.lower() in ('restricted')
+
+    @property
     def wkt(self):
 
         wkt = "POLYGON(({} {}, {} {}, {} {}, {} {}, {} {}))".format(
