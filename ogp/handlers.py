@@ -7,6 +7,12 @@ from lxml import etree
 from ogp.layer import Layer
 from ogp import settings
 
+class MainHandler(RequestHandler):
+
+    def get(self):
+        self.render('index.html')
+
+
 class WFSHandler(RequestHandler):
 
     def get_current_user(self):
