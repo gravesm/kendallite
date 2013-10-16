@@ -1,8 +1,6 @@
 define([
-    'jquery',
-    'underscore',
     'appconfig'
-], function($, _, Config) {
+], function(Config) {
 
 var OGPSolr = function(options) {
     this.options = options;

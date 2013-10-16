@@ -1,7 +1,6 @@
 define([
-    'backbone',
     'models/item'
-], function(Backbone, Item) {
+], function(Item) {
 
 return Backbone.Collection.extend({
 

@@ -1,7 +1,6 @@
 define([
-    'backbone',
     'models/facet'
-], function(Backbone, Facet) {
+], function(Facet) {
 
 return Backbone.Collection.extend({
 

@@ -1,11 +1,8 @@
 define([
-    'jquery',
-    'backbone',
-    'underscore',
     'models/query',
     'views/item',
     'appconfig'
-], function($, Backbone, _, Query, ItemView, Config) {
+], function(Query, ItemView, Config) {
 
 /**
  * Handles interaction in the results tab.

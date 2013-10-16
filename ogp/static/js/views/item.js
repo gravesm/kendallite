@@ -1,9 +1,7 @@
 define([
-    'underscore',
-    'backbone',
     'text!tmpl/item.html',
     'map/map'
-], function(_, Backbone, Tmpl, Map) {
+], function(Tmpl, Map) {
 
 var ItemView = Backbone.View.extend({
 

@@ -1,11 +1,9 @@
 require([
-    'jquery',
     'app',
     'appconfig',
     'map/map',
-    'locationhash',
-    'bootstrap'
-], function($, App, Config, Map, Hash) {
+    'locationhash'
+], function(App, Config, Map, Hash) {
 
 /**
  * Entry point for the application.

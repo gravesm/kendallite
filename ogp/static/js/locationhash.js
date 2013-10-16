@@ -1,9 +1,7 @@
 define([
-    'jquery',
-    'underscore',
     'map/map',
     'models/query'
-], function($, _, Map, Query) {
+], function(Map, Query) {
 
     var Hash = function() {
 

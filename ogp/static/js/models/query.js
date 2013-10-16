@@ -1,6 +1,4 @@
-define([
-    'backbone'
-], function(Backbone) {
+define(function() {
 
 /**
  * The Query model stores the current state of the Solr query.

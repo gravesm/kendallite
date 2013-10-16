@@ -1,10 +1,7 @@
 define([
-    'jquery',
-    'backbone',
-    'underscore',
     'text!tmpl/facetitem.html',
     'models/query'
-], function($, Backbone, _, Tmpl, Query) {
+], function(Tmpl, Query) {
 
 return Backbone.View.extend({
 

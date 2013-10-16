@@ -1,6 +1,4 @@
-define([
-    'underscore'
-], function(_) {
+define(function() {
 
     var IndexReader = function() {};
 

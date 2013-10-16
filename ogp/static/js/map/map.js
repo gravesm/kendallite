@@ -1,8 +1,6 @@
 define([
-    'underscore',
-    'jquery',
     'text!tmpl/layer_switcher.html',
-], function(_, $, Tmpl) {
+], function(Tmpl) {
 
 var Map = function() {
 

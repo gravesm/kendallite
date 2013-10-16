@@ -1,8 +1,7 @@
 define([
-    'jquery',
     'appconfig',
     'solr/reader'
-], function($, Config, Reader) {
+], function(Config, Reader) {
 
 var Solr = function(params) {
     this.params = params;

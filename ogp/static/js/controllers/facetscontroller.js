@@ -1,10 +1,7 @@
 define([
-    'jquery',
-    'backbone',
-    'underscore',
     'views/facetitem',
     'models/query'
-], function($, Backbone, _, FacetView, Query) {
+], function(FacetView, Query) {
 
     return Backbone.View.extend({
 

@@ -1,7 +1,4 @@
 define([
-    'jquery',
-    'underscore',
-    'backbone',
     'collections/results',
     'controllers/resultscontroller',
     'collections/facets',
@@ -14,7 +11,7 @@ define([
     'solr/requestqueue',
     'solr/solr',
     'solr/ogprequest'
-], function($, _, Backbone, Results, ResultsController, Facets, FacetView,
+], function(Results, ResultsController, Facets, FacetView,
                 Facet, Map, Config, Query, Hash, RQ, Solr, OGP) {
 
 _.templateSettings.variable = "o";

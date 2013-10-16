@@ -1,22 +1,14 @@
 /**
  * Copyright 2013 MIT Libraries.
  */
-(function(root, factory) {
-    if (typeof exports === "object") {
-        module.exports = factory(require("jquery"));
-    } else if (typeof define === "function" && define.amd) {
-        define(['jquery'], factory);
-    } else {
-        root.RequestQueue = factory(jQuery);
-    }
-}(this, function($) {
+define(function() {
 
     /**
      * Creates an instance of RequestQueue. This is designed to manage an
      * environment where one type of event might repeatedly generate many
      * asynchronous tasks but only the most recent task needs to be run. This
      * could be useful in handling situations such as find as you type searches.
-     * 
+     *
      * @param {number} timeout Frontloaded delay in ms before a task will be
      *                         run. If another task comes in before the previous
      *                         task's timeout happens, the previous task will be
@@ -24,7 +16,7 @@
      *                         timer.
      */
     var RequestQueue = function(timeout) {
-        
+
         var queued, request, pointer, dfd;
 
         this.delay = timeout || 0;
@@ -76,15 +68,15 @@
          *                          request object.
          */
         function runRequest(req, options) {
-            
+
             if (request && request.hasOwnProperty("reject"))
                 request.reject();
 
             request = req.run(dfd, options);
-            
+
         }
     }
 
     return RequestQueue;
-    
-}));
+
+});
