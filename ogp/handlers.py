@@ -14,6 +14,9 @@ class BaseHandler(RequestHandler):
     def get_current_user(self):
         return self.request.headers.get('Remote_user')
 
+    def reverse_url(self, name, *args):
+        return settings.APPLICATION_ROOT + super(BaseHandler, self).reverse_url(name, *args)
+
 
 class MainHandler(BaseHandler):
     """Generates search page"""
@@ -66,6 +69,7 @@ class LayerMetadataHandler(BaseHandler):
             'user': self.current_user,
             'authorized': authorized,
             'login_url': settings.SHIB_LOGIN_URL,
+            'wfs_url': self.reverse_url('wfs'),
         }
 
         if layer.is_vector or layer.is_raster:

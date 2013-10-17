@@ -70,7 +70,7 @@
                  * Add WFS control
                  */
                 wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: 'http://localhost:8888/wfs',
+                    url: '{{ wfs_url }}',
                     layers: [wms],
                     layerUrls: wms.url,
                     infoFormat: 'application/vnd.ogc.gml',
@@ -161,7 +161,7 @@
             <a href="#" class="btn btn-sm btn-primary pull-right" id="login"
                 title="Log in to view layer features">Log in</a>
         {% else %}
-            <span class="pull-right glyphicon glyphicon-question-sign" style="cursor: pointer; margin-right: 10px;line-height: 30px; font-size: 20px" data-content="This layer cannot be downloaded because it is a restricted layer at another institution." data-placement="left" data-toggle="popover"></span>
+            <span class="pull-right glyphicon glyphicon-question-sign help" data-content="This layer cannot be downloaded because it is a restricted layer at another institution." data-placement="left" data-toggle="popover"></span>
         {% end %}
     {% else %}
         <div class="btn-group pull-right">
