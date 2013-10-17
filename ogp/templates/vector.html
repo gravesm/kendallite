@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head_content %}
-    <script src="/static/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script>
         $(function() {
 
@@ -131,7 +131,7 @@
             login_url = "{{ login_url }}?target=";
             $("#login").attr("href", login_url + encodeURIComponent(location.href));
 
-            $("[data-toggle=tooltip]").tooltip();
+            $("[data-toggle=popover]").popover();
 
         });
     </script>
@@ -147,7 +147,7 @@
 {% block map_nav %}
     <button class="btn btn-default btn-sm" type="button" title="Zoom to extent of layer"
         id="zoom-to-layer">
-        <span class="icon">z</span>
+        <span class="glyphicon glyphicon-zoom-in"></span>
     </button>
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm"
@@ -156,31 +156,33 @@
         </button>
         <ul class="dropdown-menu map-layers"></ul>
     </div>
-    <div class="btn-group pull-right">
-        <button type="button" class="btn btn-default dropdown-toggle btn-sm"
-            data-toggle="dropdown">
-            Download as <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
-            <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
-        </ul>
-    </div>
-{% end %}
-
-{% block map_overlay %}
     {% if not authorized %}
         {% if layer.institution.lower() == 'mit' %}
-            <a href="#" class="btn btn-default btn-xs" id="login">Log in</a> to view layer features
+            <a href="#" class="btn btn-sm btn-primary pull-right" id="login"
+                title="Log in to view layer features">Log in</a>
         {% else %}
-            Features not available for this layer
-            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="foobar"></span>
+            <span class="pull-right glyphicon glyphicon-question-sign" style="cursor: pointer; margin-right: 10px;line-height: 30px; font-size: 20px" data-content="This layer cannot be downloaded because it is a restricted layer at another institution." data-placement="left" data-toggle="popover"></span>
         {% end %}
     {% else %}
-        Loading layer...
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle btn-sm"
+                data-toggle="dropdown">
+                Download as <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
+                <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
+            </ul>
+        </div>
     {% end %}
 {% end %}
 
+{% block map_overlay %}
+    {% if authorized %}
+        <div class="map-overlay overlay-background"></div>
+        <div class="map-overlay overlay-text">Loading layer...</div>
+    {% end %}
+{% end %}
 
 {% block metadata %}
     {% raw fgdc %}

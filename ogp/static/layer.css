@@ -14,7 +14,7 @@
 }
 
 #map {
-    border: 1px solid #ddd;
+    border: 1px solid #a0a0a0;
     height: 400px;
     min-width: 500px;
     position: relative;
@@ -39,12 +39,6 @@
     z-index: 3;
     text-align: center;
     line-height: 30px;
-}
-
-div.olControlZoom {
-    top: 40px !important;
-    right: 8px !important;
-    left: auto !important;
 }
 
 h3 {
