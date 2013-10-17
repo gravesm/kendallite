@@ -22,7 +22,6 @@ class MainHandler(BaseHandler):
 
         kwargs = {
             'user': self.current_user,
-            'login_url': settings.SHIB_LOGIN_URL,
         }
 
         self.render('index.html', **kwargs)
@@ -66,6 +65,7 @@ class LayerMetadataHandler(BaseHandler):
             'layer': layer,
             'user': self.current_user,
             'authorized': authorized,
+            'login_url': settings.SHIB_LOGIN_URL,
         }
 
         if layer.is_vector or layer.is_raster:

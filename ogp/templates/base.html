@@ -50,7 +50,8 @@
                 </div>
                 <div class="col-md-8">
                     <div id="map">
-                        <div class="map-overlay">Loading layer...</div>
+                        <div class="map-overlay overlay-background"></div>
+                        <div class="map-overlay overlay-text">{% block map_overlay %}{% end %}</div>
                     </div>
                 </div>
             </div>

@@ -4,71 +4,14 @@
     <script src="/static/underscore-min.js"></script>
     <script>
         $(function() {
-            var opts = {
+
+            var opts, map, box, wms, wfs_control, wfs_tmpl, preview, layer_tmpl,
+                login_url;
+
+            map = new OpenLayers.Map({
                 div: "map",
-                projection: "EPSG:900913",
-                controls: [
-                    new OpenLayers.Control.Navigation({documentDrag: true})
-                ]
-            };
-            map = new OpenLayers.Map(opts);
-
-            var wms = new OpenLayers.Layer.WMS('{{ layer.name }}', [
-                {% for loc in layer.location['wms'] %}
-                    '{{ loc }}'
-                {% end %}
-                ], {
-                    layers: '{{ layer.layer_name }}',
-                    format: "image/png",
-                    tiled: true,
-                    exceptions: "application/vnd.ogc.se_inxml",
-                    transparent: true
-                }, {
-                    transitionEffect: "resize",
-                    opacity: 1
-                }
-            );
-
-            wms.events.register("loadstart", wms, function() {
-                $(".map-overlay").show().animate({
-                    opacity: 0.5
-                }, 300);
+                projection: "EPSG:900913"
             });
-
-            wms.events.register("loadend", wms, function() {
-                $(".map-overlay").animate({
-                    opacity: 0
-                }, 300, function() {
-                    $(this).hide();
-                });
-            });
-
-            var bounds = OpenLayers.Geometry.fromWKT('{{ layer.wkt }}').getBounds();
-            bounds.transform("EPSG:4326", "EPSG:900913");
-
-            map.addLayer(wms);
-
-            wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
-                url: 'http://localhost:8888/wfs',
-                layers: [wms],
-                layerUrls: wms.url,
-                infoFormat: 'application/vnd.ogc.gml',
-                vendorParams: {
-                    OGPID: '{{ layer.id }}'
-                }
-            });
-
-            var tmpl = _.template($("#feature-tmpl").html());
-
-            wfs_control.events.register("getfeatureinfo", this, function(ev) {
-                $("#features-content").empty();
-                _.each(ev.features, function(feature) {
-                    $("#features-content").append(tmpl(feature));
-                });
-                $("#features-dialog").modal();
-            });
-
-            map.addControl(wfs_control);
 
             map.addLayers([
                 new OpenLayers.Layer.Google("Google Physical", {
@@ -83,20 +26,100 @@
                 })
             ]);
 
-            wfs_control.activate();
+            box = OpenLayers.Geometry.fromWKT('{{ layer.wkt }}');
+            box.transform("EPSG:4326", "EPSG:900913");
 
-            map.zoomToExtent(bounds);
+            {% if authorized %}
+
+                /**
+                 * Add WMS layer
+                 */
+                wms = new OpenLayers.Layer.WMS('{{ layer.name }}', [
+                    {% for loc in layer.location['wms'] %}
+                        '{{ loc }}'
+                    {% end %}
+                    ], {
+                        layers: '{{ layer.layer_name }}',
+                        format: "image/png",
+                        tiled: true,
+                        exceptions: "application/vnd.ogc.se_inxml",
+                        transparent: true
+                    }, {
+                        transitionEffect: "resize",
+                        opacity: 1
+                    }
+                );
+
+                wms.events.register("loadstart", wms, function() {
+                    $(".map-overlay").show().animate({
+                        opacity: 0.5
+                    }, 300);
+                });
+
+                wms.events.register("loadend", wms, function() {
+                    $(".map-overlay").animate({
+                        opacity: 0
+                    }, 300, function() {
+                        $(this).hide();
+                    });
+                });
+
+                map.addLayer(wms);
+
+                /**
+                 * Add WFS control
+                 */
+                wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
+                    url: 'http://localhost:8888/wfs',
+                    layers: [wms],
+                    layerUrls: wms.url,
+                    infoFormat: 'application/vnd.ogc.gml',
+                    vendorParams: {
+                        OGPID: '{{ layer.id }}'
+                    }
+                });
+
+                wfs_tmpl = _.template($("#feature-tmpl").html());
+
+                wfs_control.events.register("getfeatureinfo", this, function(ev) {
+                    $("#features-content").empty();
+                    _.each(ev.features, function(feature) {
+                        $("#features-content").append(wfs_tmpl(feature));
+                    });
+                    $("#features-dialog").modal();
+                });
+
+                map.addControl(wfs_control);
+
+                wfs_control.activate();
+
+            {% else %}
+
+                /**
+                 * Add preview box if user is not authorized to view features
+                 */
+                preview = new OpenLayers.Layer.Vector("Preview Layer", {
+                    projection: "EPSG:4326"
+                });
+
+                preview.addFeatures([new OpenLayers.Feature.Vector(box)]);
+
+                map.addLayer(preview);
+
+            {% end %}
+
+            map.zoomToExtent(box.getBounds());
 
             $("#zoom-to-layer").on("click", function(ev) {
                 ev.preventDefault();
-                map.zoomToExtent(bounds);
+                map.zoomToExtent(box.getBounds());
             });
 
-            var tmpl = _.template($("#layer-switcher").html());
+            layer_tmpl = _.template($("#layer-switcher").html());
 
             _.each(map.layers, function(layer) {
                 if (layer.isBaseLayer) {
-                    $(".map-layers").append(tmpl(layer));
+                    $(".map-layers").append(layer_tmpl(layer));
                 }
             });
 
@@ -104,6 +127,12 @@
                 ev.preventDefault();
                 map.setBaseLayer(map.getLayer($(this).data("layerid")));
             });
+
+            login_url = "{{ login_url }}?target=";
+            $("#login").attr("href", login_url + encodeURIComponent(location.href));
+
+            $("[data-toggle=tooltip]").tooltip();
+
         });
     </script>
     <script type="text/x-template" id="layer-switcher">
@@ -138,6 +167,20 @@
         </ul>
     </div>
 {% end %}
+
+{% block map_overlay %}
+    {% if not authorized %}
+        {% if layer.institution.lower() == 'mit' %}
+            <a href="#" class="btn btn-default btn-xs" id="login">Log in</a> to view layer features
+        {% else %}
+            Features not available for this layer
+            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="foobar"></span>
+        {% end %}
+    {% else %}
+        Loading layer...
+    {% end %}
+{% end %}
+
 
 {% block metadata %}
     {% raw fgdc %}
