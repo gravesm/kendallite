@@ -11,7 +11,8 @@ var ItemView = Backbone.View.extend({
 
     events: {
         mouseenter: "mouseenter",
-        mouseleave: "mouseleave"
+        mouseleave: "mouseleave",
+        "click .zoom": "zoom"
     },
 
     initialize: function(options) {
@@ -50,12 +51,9 @@ var ItemView = Backbone.View.extend({
 
     },
 
-    zoom: function() {
+    zoom: function(ev) {
 
-        /**
-         * @todo Need to stick this model somewhere so it appears at top of
-         *       results.
-         */
+        ev.preventDefault();
 
         Map.zoomToLayer(this.model);
 
