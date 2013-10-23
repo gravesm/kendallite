@@ -64,12 +64,17 @@ class LayerMetadataHandler(BaseHandler):
         if (self.current_user and layer.institution.lower() == "mit") or not layer.is_restricted:
                 authorized = True
 
+        if (layer.institution.lower() == "mit") and layer.is_restricted:
+            wfs = layer.location['wfs']
+        else:
+            wfs = self.reverse_url('wfs')
+
         kwargs = {
             'layer': layer,
             'user': self.current_user,
             'authorized': authorized,
             'login_url': settings.SHIB_LOGIN_URL,
-            'wfs_url': self.reverse_url('wfs'),
+            'wfs_url': wfs,
         }
 
         if layer.is_vector or layer.is_raster:
