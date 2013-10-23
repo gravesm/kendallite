@@ -13,4 +13,10 @@ class Field(object):
 class JSONField(Field):
 
     def add_to_class(self, value):
-        return json.loads(value)
+        try:
+            return json.loads(value)
+        except ValueError as err:
+            # There's a lot of data that's not properly wrapped. Make an attempt
+            # to parse this, otherwise it's someone else's problem
+            value = "{{ {0} }}".format(value)
+            return json.loads(value)
