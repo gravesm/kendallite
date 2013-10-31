@@ -38,23 +38,17 @@
                     </div>
                     <button type="submit" class="btn btn-default btn-sm">Zoom To</button>
                 </form>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-left">
                     <li>
                         <a href="#" id="filters-button">
                             Filters <b class="caret"></b>
                         </a>
                     </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Base Layers <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu map-layers">
-                            <!-- Layer list generated dynamically by map.js -->
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            About <b class="caret"></b>
+                            <span class="glyphicon glyphicon-question-sign"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -121,6 +115,33 @@
                         <a href="#">More Results</a>
                     </div>
                 </div>
+            </div>
+
+            <!-- Map controls -->
+            <div class="control-element">
+                <div class="btn-group-vertical">
+                    <button type="button" class="btn btn-primary btn-xs" id="zoom-in">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-xs" id="zoom-out">
+                        <span class="glyphicon glyphicon-minus"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="control-element">
+                <button type="button" data-toggle="dropdown"
+                    class="dropdown-toggle btn btn-primary btn-xs">
+                    Base Layers <b class="caret"></b>
+                </button>
+                <ul class="dropdown-menu pull-right map-layers">
+                    <!-- Layer list generated dynamically by map.js -->
+                </ul>
+            </div>
+            <div class="control-element">
+                <button type="button" class="btn btn-primary btn-xs" id="zoom-max"
+                    title="Zoom to max extent">
+                    <span class="glyphicon glyphicon-globe"></span>
+                </button>
             </div>
 
         </div> <!-- end wrapper -->

@@ -14,7 +14,11 @@ var Map = function() {
             div: "map",
             projection: "EPSG:900913",
             controls: [
-                new OpenLayers.Control.Navigation({documentDrag: true})
+                new OpenLayers.Control.Navigation({documentDrag: true}),
+                new OpenLayers.Control.Zoom({
+                    zoomInId: "zoom-in",
+                    zoomOutId: "zoom-out"
+                })
             ]
         };
 
@@ -62,6 +66,15 @@ var Map = function() {
         $(".map-layers").on("click", "a", function(ev) {
             ev.preventDefault();
             map.setBaseLayer(map.getLayer($(this).data("layerid")));
+        });
+
+        /**
+         * OL does not provide an easy way to set arbitrary divs as controls.
+         * We'll have to hard code some things here.
+         */
+        $("#zoom-max").on("click", function() {
+            map.setCenter([0,0]);
+            map.zoomToMaxExtent();
         });
 
     };

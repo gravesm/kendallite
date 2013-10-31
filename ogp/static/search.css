@@ -59,10 +59,6 @@
     background-color: rgba(255,255,255,0.92);
 }
 
-.search-result .icon {
-    margin: 0 3px;
-}
-
 .search-nav {
     text-align: center;
     border: thin solid #66afe9;
@@ -96,4 +92,11 @@
 
 #filters a {
     margin-left: 15px;
+}
+
+.control-element {
+    float: right;
+    position: relative;
+    margin-top: 20px;
+    margin-right: 20px;
 }
