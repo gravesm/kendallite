@@ -18,7 +18,7 @@ def load_layer(layer, *args, **kwargs):
 
 @gen.coroutine
 def get_layer(cls, id):
-    http = AsyncHTTPClient()
+    http = get_client()
 
     fields = (
         'Access', 'Location', 'LayerDisplayName', 'FgdcText', 'PlaceKeywords',
@@ -38,3 +38,6 @@ def get_layer(cls, id):
     layer = cls(response.body)
 
     raise gen.Return(layer)
+
+def get_client():
+    return AsyncHTTPClient()
