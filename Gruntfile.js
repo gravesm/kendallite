@@ -17,15 +17,15 @@ module.exports = function(grunt) {
                 options: {
                     specs: "spec/*.spec.js",
                     vendor: [
-                        'src/js/libs/jquery-1.9.1.min.js',
-                        'src/js/libs/underscore-min.js'
+                        'ogp/static/js/libs/jquery-1.9.1.min.js',
+                        'ogp/static/js/libs/underscore-min.js'
                     ],
                     host: "http://127.0.0.1:8000/",
                     template: require("grunt-template-jasmine-requirejs"),
                     templateOptions: {
-                        requireConfigFile: "src/config.js",
+                        requireConfigFile: "ogp/static/js/config.js",
                         requireConfig: {
-                            baseUrl: "src/js"
+                            baseUrl: "ogp/static/js"
                         }
                     }
                 }
