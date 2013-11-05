@@ -14,6 +14,9 @@ class BaseHandler(RequestHandler):
     def get_current_user(self):
         return self.request.headers.get('Remote_user')
 
+    def authorized(self, layer):
+        return (self.current_user and layer.institution.lower() == "mit") or not layer.is_restricted
+
     def reverse_url(self, name, *args):
         return settings.APPLICATION_ROOT + super(BaseHandler, self).reverse_url(name, *args)
 
@@ -59,39 +62,30 @@ class LayerMetadataHandler(BaseHandler):
 
         layer = yield Layer.get(layerid)
 
-        authorized = False
+        context = {
+            'user': self.current_user,
+            'authorized': self.authorized(layer),
+            'login_url': settings.SHIB_LOGIN_URL,
+        }
 
-        if (self.current_user and layer.institution.lower() == "mit") or not layer.is_restricted:
-                authorized = True
+        if layer.is_vector:
+            self._render_vector(layer, context)
+        elif layer.is_raster:
+            self._render_raster(layer, context)
+        else:
+            self.render('nongeo.html', layer=layer)
 
+    def _render_vector(self, layer, ctx):
         if (layer.institution.lower() == "mit") and layer.is_restricted:
             wfs = layer.location['wfs']
         else:
             wfs = self.reverse_url('wfs')
+        html = self._transform(layer.fgdc, transformer.fgdc_transform)
+        self.render('vector.html', layer=layer, wfs=wfs, fgdc=html, **ctx)
 
-        kwargs = {
-            'layer': layer,
-            'user': self.current_user,
-            'authorized': authorized,
-            'login_url': settings.SHIB_LOGIN_URL,
-            'wfs_url': wfs,
-        }
-
-        if layer.is_vector or layer.is_raster:
-
-            if layer.is_vector:
-                template = 'vector.html'
-            else:
-                template = 'raster.html'
-
-            html = self._transform(layer.fgdc, transformer.fgdc_transform)
-
-            kwargs['fgdc'] = html
-
-        else:
-            template = 'nongeo.html'
-
-        self.render(template, **kwargs)
+    def _render_raster(self, layer, ctx):
+        html = self._transform(layer.fgdc, transformer.fgdc_transform)
+        self.render('raster.html', layer=layer, fgdc=html, **ctx)
 
     def _transform(self, xml, transform):
         root = etree.XML(xml.strip().encode('utf-8'))
