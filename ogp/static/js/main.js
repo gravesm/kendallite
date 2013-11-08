@@ -51,6 +51,7 @@ $(function() {
 
     $("#filters-button").on("click", function() {
 
+        $(this).parent().toggleClass("open");
         $("#filters").toggle(0, resizeResults);
 
         return false;

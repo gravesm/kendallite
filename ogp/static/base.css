@@ -38,9 +38,8 @@ html, body {
 }
 .navbar-nav>li>a:hover {
     border-top: 2px solid #66afe9;
-    background-color: transparent;
 }
 
-.nav .open>a {
+.navbar-nav>li>a:focus {
     background-color: transparent;
 }
