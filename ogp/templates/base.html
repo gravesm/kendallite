@@ -50,18 +50,22 @@
                                 {{ layer.datatype }}
                             </a>
                         </dd>
-                        <dt>Theme Keywords</dt>
-                        <dd>
-                            {% for keyword in layer.keywords_theme.split() %}
-                                <a href="#">{{ keyword }}</a>
-                            {% end %}
-                        </dd>
-                        <dt>Place Keywords</dt>
-                        <dd>
-                            {% for keyword in layer.keywords_place.split() %}
-                                <a href="#">{{ keyword }}</a>
-                            {% end %}
-                        </dd>
+                        {% if layer.keywords_theme %}
+                            <dt>Theme Keywords</dt>
+                            <dd>
+                                {% for keyword in layer.keywords_theme.split() %}
+                                    <a href="#">{{ keyword }}</a>
+                                {% end %}
+                            </dd>
+                        {% end %}
+                        {% if layer.keywords_place %}
+                            <dt>Place Keywords</dt>
+                            <dd>
+                                {% for keyword in layer.keywords_place.split() %}
+                                    <a href="#">{{ keyword }}</a>
+                                {% end %}
+                            </dd>
+                        {% end %}
                     </dl>
                 </div>
                 <div class="col-md-8">
