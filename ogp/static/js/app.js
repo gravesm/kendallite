@@ -5,16 +5,27 @@ define([
     'controllers/facetscontroller',
     'models/facet',
     'map/map',
-    'appconfig',
+    'module',
     'models/query',
     'locationhash',
     'solr/requestqueue',
     'solr/solr',
     'solr/ogprequest'
 ], function(Results, ResultsController, Facets, FacetView,
-                Facet, Map, Config, Query, Hash, RQ, Solr, OGP) {
+                Facet, Map, module, Query, Hash, RQ, Solr, OGP) {
 
 _.templateSettings.variable = "o";
+
+/**
+ * Maintains the necessary state for rendering the results div.
+ *
+ * @property {number} windowsize Number of visible results
+ */
+var results_state = {
+    windowsize: 0
+};
+
+var solr_url = module.config().solr;
 
 /**
  * Main application view.
@@ -71,10 +82,15 @@ var App = Backbone.View.extend({
 
         this.listenTo(Query, "change", this.search);
         this.listenTo(Query, "change", Hash.update);
-        ResultsController.listenTo(this.results, "reset", ResultsController.reload);
 
         /* Once the application state is initialized, trigger the search. */
         Query.trigger("change", Query);
+
+        new ResultsController({
+            collection: this.results,
+            el: $("#results"),
+            results: results_state
+        });
 
         /* Set up facets. */
         this.facets.add(new Facet({name: "InstitutionSort"}));
@@ -107,7 +123,7 @@ var App = Backbone.View.extend({
 
         start = Query.get("start") || 0;
 
-        Query.set("start", start + Config.results.windowsize);
+        Query.set("start", start + results_state.windowsize);
 
     },
 
@@ -123,7 +139,7 @@ var App = Backbone.View.extend({
         $(".results-mask").show();
 
         start = Query.get("start");
-        start = start - Config.results.windowsize;
+        start = start - results_state.windowsize;
         start = (start < 0) ? 0 : start;
 
         Query.set("start", start);
@@ -221,18 +237,28 @@ var App = Backbone.View.extend({
             datatypes: query.get("DataTypeSort"),
             institutions: query.get("InstitutionSort"),
             places: query.get("PlaceKeywordsSort"),
-            dates: query.get("ContentDate")
+            dates: query.get("ContentDate"),
+            boosts: {
+                area: 1.0,
+                center: 1.0,
+                intx: 1.0,
+                name: 1.0,
+                publisher: 1.0,
+                originator: 1.0,
+                place_keywords: 2.5
+            }
         });
 
         q = geosearch.getSearchParams();
 
         q.start = query.get("start") || 0;
+        q.rows = results_state.windowsize || 15;
 
         results = this.results;
         facets = this.facets;
 
         this.req.queueRequest(
-            new Solr(q), this
+            new Solr(q, {solr: solr_url}), this
         ).done(function(data) {
 
             query.set({
@@ -262,6 +288,49 @@ var App = Backbone.View.extend({
 
 return {
     run: function() {
+        /**
+         * Resizes the search results div to fit in the window.
+         */
+        function resizeResults() {
+
+            var resultsHeight, innerHeight;
+
+            resultsHeight =
+                $(window).height() -
+                $(".search-results").offset().top -
+                30
+            ;
+
+            innerHeight = resultsHeight - (resultsHeight % 30);
+
+            results_state.windowsize = innerHeight / 30;
+
+            $(".search-results").css("max-height", innerHeight + "px");
+
+        }
+
+        resizeResults();
+
+        $(window).on("resize", resizeResults);
+
+        $("#search").hover(
+            function() {
+                $(".search-nav").fadeTo(200, 0.95);
+            },
+            function() {
+                $(".search-nav").fadeTo(200, 0.0);
+            }
+        );
+
+        $("#filters-button").on("click", function() {
+
+            $(this).parent().toggleClass("open");
+            $("#filters").toggle(0, resizeResults);
+
+            return false;
+
+        });
+
         return new App();
     }
 };

@@ -1,4 +1,4 @@
-define(['solr/ogprequest', 'appconfig'], function(OGP, Cfg) {
+define(['solr/ogprequest'], function(OGP) {
 
     var bounds, ogp;
 
@@ -8,6 +8,7 @@ define(['solr/ogprequest', 'appconfig'], function(OGP, Cfg) {
 
             ogp = new OGP();
             ogp.options = {};
+            ogp.options.boosts = {};
 
             bounds = jasmine.createSpyObj('bounds',
                 ['toGeometry', 'getArea', 'getCenterLonLat']);
@@ -20,14 +21,13 @@ define(['solr/ogprequest', 'appconfig'], function(OGP, Cfg) {
         });
 
         it("sets the query fields parameter", function() {
-            Cfg.solr.LayerDisplayName = 70;
-            Cfg.solr.Publisher = 71;
-            Cfg.solr.Originator = 72;
-            Cfg.solr.Abstract = 73;
-            Cfg.solr.PlaceKeywords = 74;
+            ogp.options.boosts.name = 70;
+            ogp.options.boosts.publisher = 71;
+            ogp.options.boosts.originator = 72;
+            ogp.options.boosts.place_keywords = 74;
 
             expect(ogp.getSearchParams().qf).toEqual(
-                "LayerDisplayName^70 Publisher^71 Originator^72 Abstract^73 PlaceKeywords^74");
+                "LayerDisplayName^70 Publisher^71 Originator^72 PlaceKeywords^74");
         });
 
         it("sets the query parameter", function() {
@@ -38,9 +38,9 @@ define(['solr/ogprequest', 'appconfig'], function(OGP, Cfg) {
         it("sets the boost function parameter", function() {
             spyOn(ogp, "areaRelevancy").andReturn("BubbleCrumb");
             spyOn(ogp, "centerRelevancy").andReturn("BibbleTumb");
-            Cfg.solr.areascore = 10;
-            Cfg.solr.centerscore = 15;
-            Cfg.solr.intxscore = 20;
+            ogp.options.boosts.area = 10;
+            ogp.options.boosts.center = 15;
+            ogp.options.boosts.intx = 20;
 
             expect(ogp.getSearchParams().bf).toEqual([
                 'BubbleCrumb^10', 'BibbleTumb^15', 'div($intx,$union)^20'

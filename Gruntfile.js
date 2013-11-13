@@ -23,9 +23,11 @@ module.exports = function(grunt) {
                     host: "http://127.0.0.1:8000/",
                     template: require("grunt-template-jasmine-requirejs"),
                     templateOptions: {
-                        requireConfigFile: "ogp/static/js/config.js",
                         requireConfig: {
-                            baseUrl: "ogp/static/js"
+                            baseUrl: "ogp/static/js",
+                            paths: {
+                                'text': 'libs/text'
+                            }
                         }
                     }
                 }

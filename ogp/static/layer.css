@@ -15,6 +15,10 @@
     font-size: 20px
 }
 
+.map-nav .help:hover {
+    color: #428bca;
+}
+
 .layer-info dd {
     margin-left: 10px;
     margin-bottom: 10px;

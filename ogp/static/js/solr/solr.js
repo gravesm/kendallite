@@ -1,10 +1,15 @@
 define([
-    'appconfig',
     'solr/reader'
-], function(Config, Reader) {
+], function(Reader) {
 
-var Solr = function(params) {
+/**
+ * @constructor
+ * @param {object} params Solr params to added to the HTTP request
+ * @param {object} opts   Any options to pass to constructor
+ */
+var Solr = function(params, opts) {
     this.params = params;
+    this.opts = opts;
     this.reader = new Reader();
 };
 
@@ -23,7 +28,6 @@ var methods = {
         defaults = {
             wt: "json",
             q: "*:*",
-            rows: Config.results.windowsize || 15,
             facet: true,
             "facet.field": [
                 "{!ex=inst}InstitutionSort",
@@ -46,7 +50,7 @@ var methods = {
         params = $.extend({}, defaults, this.params);
 
         return $.ajax({
-            url: Config.ogp.solr + "select/",
+            url: this.opts.solr + "select/",
             data: params,
             traditional: true
         });

@@ -1,7 +1,8 @@
 define([
     'text!tmpl/item.html',
-    'map/map'
-], function(Tmpl, Map) {
+    'map/map',
+    'module',
+], function(Tmpl, Map, module) {
 
 var ItemView = Backbone.View.extend({
 
@@ -25,6 +26,7 @@ var ItemView = Backbone.View.extend({
     render: function() {
 
         var data = this.model.toJSON();
+        data.site_root = module.config().site_root;
 
         this.$el.html( this.template(data) );
 

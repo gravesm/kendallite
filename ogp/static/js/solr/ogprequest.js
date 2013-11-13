@@ -1,6 +1,4 @@
-define([
-    'appconfig'
-], function(Config) {
+define(function() {
 
 var OGPSolr = function(options) {
     this.options = options;
@@ -16,24 +14,25 @@ var methods = {
      */
     getSearchParams: function() {
 
-        var bbox, area, bf_array, qf_array, params;
+        var bbox, area, bf_array, qf_array, params, boosts;
+
+        boosts = this.options.boosts;
 
         bbox = this.options.bounds;
 
         area = bbox.toGeometry().getArea();
 
         bf_array = [
-            this.areaRelevancy(bbox) + "^" + Config.solr.areascore,
-            this.centerRelevancy(bbox) + "^" + Config.solr.centerscore,
-            "div($intx,$union)^" + Config.solr.intxscore
+            this.areaRelevancy(bbox) + "^" + boosts.area,
+            this.centerRelevancy(bbox) + "^" + boosts.center,
+            "div($intx,$union)^" + boosts.intx
         ];
 
         qf_array = [
-            "LayerDisplayName^"+Config.solr.LayerDisplayName,
-            "Publisher^"+Config.solr.Publisher,
-            "Originator^"+Config.solr.Originator,
-            "Abstract^"+Config.solr.Abstract,
-            "PlaceKeywords^"+Config.solr.PlaceKeywords
+            "LayerDisplayName^" + boosts.name,
+            "Publisher^" + boosts.publisher,
+            "Originator^" + boosts.originator,
+            "PlaceKeywords^" + boosts.place_keywords
         ];
 
         params = {

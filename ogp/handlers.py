@@ -28,6 +28,8 @@ class MainHandler(BaseHandler):
 
         kwargs = {
             'user': self.current_user,
+            'SOLR_URL': settings.SOLR_URL,
+            'SITE_ROOT': settings.APPLICATION_ROOT,
         }
 
         self.render('index.html', **kwargs)
