@@ -70,7 +70,7 @@
                  * Add WFS control
                  */
                 wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: '{{ wfs_url }}',
+                    url: '{{ wfs }}',
                     layers: [wms],
                     layerUrls: wms.url,
                     infoFormat: 'application/vnd.ogc.gml',
