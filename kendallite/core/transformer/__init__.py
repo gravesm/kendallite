@@ -14,4 +14,7 @@ def _get_transform():
 ##
 # Load the transformer on server start and cache for future use.
 ##
-fgdc_transform = _get_transform()
+if settings.DEBUG:
+    fgdc_transform = lambda x: _get_transform()(x)
+else:
+    fgdc_transform = _get_transform()
