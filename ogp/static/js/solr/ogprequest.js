@@ -1,7 +1,7 @@
 define(function() {
 
 var OGPSolr = function(options) {
-    this.options = options;
+    this.options = options || {};
 };
 
 var methods = {
@@ -79,7 +79,9 @@ var methods = {
             filters.push(this.dateFilter(dates));
         }
 
-        filters.push(this.geofilter(bbox));
+        if (this.options.geofilter) {
+            filters.push(this.geofilter(bbox));
+        }
 
         return filters;
 

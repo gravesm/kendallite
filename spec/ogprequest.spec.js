@@ -66,7 +66,8 @@ define(['solr/ogprequest'], function(OGP) {
             var ogp = new OGP({
                 datatypes: ['frob'],
                 institutions: ['frober'],
-                places: ['frobest']
+                places: ['frobest'],
+                geofilter: true
             });
 
             spyOn(ogp, "datatypeFilter").andReturn("hic");
@@ -76,6 +77,11 @@ define(['solr/ogprequest'], function(OGP) {
 
             expect(ogp.getFilters()).toEqual(['hic', 'huius', 'huic', 'hunc']);
 
+        });
+
+        it("does not add filters when not provided", function() {
+            var ogp = new OGP();
+            expect(ogp.getFilters()).toEqual([]);
         });
 
         describe("creates search components", function() {

@@ -33,6 +33,21 @@
     margin-bottom: 5px;
 }
 
+#search-form .checkbox {
+    background-color: rgba(255,255,255,0.9);
+    padding: 3px 10px 3px;
+    border-radius: 3px;
+    color: #8e8e8e;
+}
+
+#search-form .checkbox label {
+    margin-left: 10px;
+}
+
+#search-form input[type="checkbox"] {
+    margin-left: 0;
+}
+
 .results-container {
     position: relative;
 }

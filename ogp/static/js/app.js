@@ -36,6 +36,7 @@ var App = Backbone.View.extend({
 
     events: {
         "submit #search-form": "setKeyword",
+        "change input[name='limit']": "setGeofilter",
         "submit #geocode": "geocode",
         "click .previous a": "previousPage",
         "click .next a": "nextPage"
@@ -146,6 +147,13 @@ var App = Backbone.View.extend({
 
     },
 
+    setGeofilter: function(ev) {
+        Query.set({
+            start: 0,
+            geofilter: $(ev.currentTarget).is(":checked")
+        });
+    },
+
     /**
      * Update the query's keyword value.
      *
@@ -238,6 +246,7 @@ var App = Backbone.View.extend({
             institutions: query.get("InstitutionSort"),
             places: query.get("PlaceKeywordsSort"),
             dates: query.get("ContentDate"),
+            geofilter: query.get("geofilter"),
             boosts: {
                 area: 1.0,
                 center: 1.0,
