@@ -7,34 +7,38 @@
          output -->
 
     <!-- Top level heading element -->
-    <xsl:variable name="hdng-1" select="'h3'" />
-    <xsl:attribute-set name="hdng-1-attr" />
+    <xsl:variable name="heading-1" select="'h3'" />
+    <xsl:attribute-set name="heading-1-attr" />
 
     <!-- Second level heading element -->
-    <xsl:variable name="hdng-2" select="'h4'" />
-    <xsl:attribute-set name="hdng-2-attr" />
+    <xsl:variable name="heading-2" select="'h4'" />
+    <xsl:attribute-set name="heading-2-attr" />
 
     <!-- Third level heading element -->
-    <xsl:variable name="hdng-3" select="'h5'" />
-    <xsl:attribute-set name="hdng-3-attr" />
+    <xsl:variable name="heading-3" select="'h5'" />
+    <xsl:attribute-set name="heading-3-attr" />
 
     <!-- Element used to wrap one or more key/value pairs -->
-    <xsl:variable name="lst-wrap" select="'dl'" />
-    <xsl:attribute-set name="lst-wrap-attr">
+    <xsl:variable name="list" select="'dl'" />
+    <xsl:attribute-set name="list-attr">
         <xsl:attribute name="class">dl-horizontal</xsl:attribute>
     </xsl:attribute-set>
 
     <!-- Element used to wrap a key in a key/value pair -->
-    <xsl:variable name="key-wrap" select="'dt'" />
-    <xsl:attribute-set name="key-wrap-attr" />
+    <xsl:variable name="key" select="'dt'" />
+    <xsl:attribute-set name="key-attr" />
 
     <!-- Element used to wrap a value in a key/value pair -->
-    <xsl:variable name="value-wrap" select="'dd'" />
-    <xsl:attribute-set name="value-wrap-attr" />
+    <xsl:variable name="value" select="'dd'" />
+    <xsl:attribute-set name="value-attr" />
+
+    <!-- Element used to wrap content of a top level section -->
+    <xsl:variable name="section-1" select="'section'" />
+    <xsl:attribute-set name="section-1-attr" />
 
     <!-- Element used to wrap an entity/attribute definition -->
-    <xsl:variable name="ea-wrap" select="'section'" />
-    <xsl:attribute-set name="ea-wrap-attr" />
+    <xsl:variable name="section-2" select="'section'" />
+    <xsl:attribute-set name="section-2-attr" />
 
 
     <xsl:template match="/">
@@ -44,26 +48,28 @@
 
     <!-- Identification Information -->
     <xsl:template match="metadata/idinfo">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Identification Information</xsl:text>
         </xsl:element>
-        <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1-attr">
+            <xsl:apply-templates />
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="citation">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdng-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="heading-2-attr">
             <xsl:text>Citation Information</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates select="citeinfo" />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="descript">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Description</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -87,10 +93,10 @@
     </xsl:template>
 
     <xsl:template match="timeperd">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Time Period of Content</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates select="timeinfo|current" />
         </xsl:element>
     </xsl:template>
@@ -102,35 +108,35 @@
     </xsl:template>
 
     <xsl:template match="status">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Status</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="spdom">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Spatial Domain</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="keywords">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Keywords</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="accconst">
         <xsl:if test="normalize-space(.) != ''">
-            <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
                 <xsl:call-template name="description">
                     <xsl:with-param name="term" select="'Access Constraints'" />
                 </xsl:call-template>
@@ -140,7 +146,7 @@
 
     <xsl:template match="useconst">
         <xsl:if test="normalize-space(.) != ''">
-            <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
                 <xsl:call-template name="description">
                     <xsl:with-param name="term" select="'Use Constraints'" />
                 </xsl:call-template>
@@ -173,11 +179,11 @@
     </xsl:template>
 
     <xsl:template match="theme">
-        <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+        <xsl:element name="{$key}" use-attribute-sets="key-attr">
             <xsl:attribute name="title">Theme Keywords</xsl:attribute>
             <xsl:text>Theme Keywords</xsl:text>
         </xsl:element>
-        <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+        <xsl:element name="{$value}" use-attribute-sets="value-attr">
             <xsl:for-each select="themekey">
                 <xsl:value-of select="." />
                 <xsl:if test="position() != last()">
@@ -188,11 +194,11 @@
     </xsl:template>
 
     <xsl:template match="place">
-        <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+        <xsl:element name="{$key}" use-attribute-sets="key-attr">
             <xsl:attribute name="title">Place Keywords</xsl:attribute>
             <xsl:text>Place Keywords</xsl:text>
         </xsl:element>
-        <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+        <xsl:element name="{$value}" use-attribute-sets="value-attr">
             <xsl:for-each select="placekey">
                 <xsl:value-of select="." />
                 <xsl:if test="position() != last()">
@@ -245,7 +251,7 @@
     </xsl:template>
 
     <xsl:template match="ptcontac">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates select="cntinfo" />
         </xsl:element>
     </xsl:template>
@@ -254,17 +260,19 @@
 
     <!-- Data Quality Information -->
     <xsl:template match="metadata/dataqual">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Data Quality Information</xsl:text>
         </xsl:element>
-        <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1-attr">
+            <xsl:apply-templates />
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="attracc">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Attribute Accuracy</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -288,7 +296,7 @@
     </xsl:template>
 
     <xsl:template match="logic">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:call-template name="description">
                 <xsl:with-param name="term" select="'Logical Consistency Report'" />
             </xsl:call-template>
@@ -296,7 +304,7 @@
     </xsl:template>
 
     <xsl:template match="complete">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:call-template name="description">
                 <xsl:with-param name="term" select="'Completeness Report'" />
             </xsl:call-template>
@@ -304,19 +312,19 @@
     </xsl:template>
 
     <xsl:template match="posacc/horizpa">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Horizontal Positional Accuracy</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="posacc/vertacc">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Vertical Positional Accuracy</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -366,10 +374,10 @@
     </xsl:template>
 
     <xsl:template match="lineage/srcinfo">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Lineage Source Information</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -379,10 +387,10 @@
     </xsl:template>
 
     <xsl:template match="lineage/procstep">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Lineage Process Step</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -429,11 +437,13 @@
 
     <!-- Spatial Data Organization Information -->
     <xsl:template match="metadata/spdoinfo">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Spatial Data Organization Information</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
-            <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1-attr">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
+                <xsl:apply-templates />
+            </xsl:element>
         </xsl:element>
     </xsl:template>
 
@@ -501,29 +511,31 @@
 
     <!-- Spatial Reference Information -->
     <xsl:template match="metadata/spref">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Spatial Reference Information</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
-            <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1-attr">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
+                <xsl:apply-templates />
+            </xsl:element>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="horizsys">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdgn-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="hdgn-2-attr">
             <xsl:text>Horizontal Coordinate System Definition</xsl:text>
         </xsl:element>
         <xsl:apply-templates />
     </xsl:template>
 
     <xsl:template match="geograph">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="geodetic">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
@@ -574,10 +586,12 @@
 
     <!-- Entity and Attribute Information -->
     <xsl:template match="metadata/eainfo">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Entity and Attribute Information</xsl:text>
         </xsl:element>
-        <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1">
+            <xsl:apply-templates />
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="detailed">
@@ -585,24 +599,24 @@
     </xsl:template>
 
     <xsl:template match="overview">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="enttyp">
-        <xsl:element name="{$hdng-2}" use-attribute-sets="hdng-2-attr">
+        <xsl:element name="{$heading-2}" use-attribute-sets="heading-2-attr">
             <xsl:value-of select="enttypl" />
         </xsl:element>
         <xsl:apply-templates />
     </xsl:template>
 
     <xsl:template match="attr">
-        <xsl:element name="{$ea-wrap}" use-attribute-sets="ea-wrap-attr">
-            <xsl:element name="{$hdng-3}" use-attribute-sets="hdng-3-attr">
+        <xsl:element name="{$section-2}" use-attribute-sets="section-2-attr">
+            <xsl:element name="{$heading-3}" use-attribute-sets="heading-3-attr">
                 <xsl:value-of select="attrlabl" />
             </xsl:element>
-            <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
                 <xsl:apply-templates />
             </xsl:element>
         </xsl:element>
@@ -658,14 +672,16 @@
 
     <!-- Distribution Information -->
     <xsl:template match="metadata/distinfo">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Distribution Information</xsl:text>
         </xsl:element>
-        <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1-attr">
+            <xsl:apply-templates />
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="distrib">
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
+        <xsl:element name="{$list}" use-attribute-sets="list-attr">
             <xsl:apply-templates select="cntinfo" />
         </xsl:element>
     </xsl:template>
@@ -674,11 +690,13 @@
 
     <!-- Metdata Reference Information -->
     <xsl:template match="metadata/metainfo">
-        <xsl:element name="{$hdng-1}" use-attribute-sets="hdng-1-attr">
+        <xsl:element name="{$heading-1}" use-attribute-sets="heading-1-attr">
             <xsl:text>Metadata Reference Information</xsl:text>
         </xsl:element>
-        <xsl:element name="{$lst-wrap}" use-attribute-sets="lst-wrap-attr">
-            <xsl:apply-templates />
+        <xsl:element name="{$section-1}" use-attribute-sets="section-1">
+            <xsl:element name="{$list}" use-attribute-sets="list-attr">
+                <xsl:apply-templates />
+            </xsl:element>
         </xsl:element>
     </xsl:template>
 
@@ -882,17 +900,17 @@
     </xsl:template>
 
     <xsl:template match="cntaddr">
-        <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+        <xsl:element name="{$key}" use-attribute-sets="key-attr">
             <xsl:attribute name="title">Address Type</xsl:attribute>
             <xsl:text>Address Type</xsl:text>
         </xsl:element>
-        <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+        <xsl:element name="{$value}" use-attribute-sets="value-attr">
             <xsl:value-of select="addrtype" />
         </xsl:element>
-        <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+        <xsl:element name="{$key}" use-attribute-sets="key-attr">
             <xsl:attribute name="title">Address</xsl:attribute>
         </xsl:element>
-        <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+        <xsl:element name="{$value}" use-attribute-sets="value-attr">
             <address>
                 <xsl:value-of select="address" /><br />
                 <xsl:value-of select="city" /><xsl:text>, </xsl:text>
@@ -945,13 +963,13 @@
     <xsl:template name="description">
         <xsl:param name="term" />
         <xsl:if test="normalize-space(.) != ''">
-            <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+            <xsl:element name="{$key}" use-attribute-sets="key-attr">
                 <xsl:attribute name="title">
                     <xsl:value-of select="$term" />
                 </xsl:attribute>
                 <xsl:value-of select="$term" />
             </xsl:element>
-            <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+            <xsl:element name="{$value}" use-attribute-sets="value-attr">
                 <xsl:value-of select="." />
             </xsl:element>
         </xsl:if>
@@ -962,13 +980,13 @@
         <xsl:if test="normalize-space(.) != ''">
             <xsl:choose>
                 <xsl:when test="starts-with(normalize-space(.), 'http')">
-                    <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+                    <xsl:element name="{$key}" use-attribute-sets="key-attr">
                         <xsl:attribute name="title">
                             <xsl:value-of select="$term" />
                         </xsl:attribute>
                         <xsl:value-of select="$term" />
                     </xsl:element>
-                    <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+                    <xsl:element name="{$value}" use-attribute-sets="value-attr">
                         <xsl:element name="a">
                             <xsl:attribute name="href">
                                 <xsl:value-of select="." />
@@ -989,13 +1007,13 @@
     <xsl:template name="description-email">
         <xsl:param name="term" />
         <xsl:if test="normalize-space(.) != ''">
-            <xsl:element name="{$key-wrap}" use-attribute-sets="key-wrap-attr">
+            <xsl:element name="{$key}" use-attribute-sets="key-attr">
                 <xsl:attribute name="title">
                     <xsl:value-of select="$term" />
                 </xsl:attribute>
                 <xsl:value-of select="$term" />
             </xsl:element>
-            <xsl:element name="{$value-wrap}" use-attribute-sets="value-wrap-attr">
+            <xsl:element name="{$value}" use-attribute-sets="value-attr">
                 <xsl:element name="a">
                     <xsl:attribute name="href">
                         <xsl:value-of select="concat('mailto:', .)" />

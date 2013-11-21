@@ -29,6 +29,12 @@
             ]);
 
             map.zoomToExtent(bounds);
+
+            $("h3").next("section").toggle();
+            $("h3").on("click", function() {
+                $(this).toggleClass('expanded');
+                $(this).next("section").toggle();
+            });
         });
     </script>
 {% end %}

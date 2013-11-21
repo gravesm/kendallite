@@ -133,6 +133,12 @@
 
             $("[data-toggle=popover]").popover();
 
+            $("h3").next("section").toggle();
+            $("h3").on("click", function() {
+                $(this).toggleClass('expanded');
+                $(this).next("section").toggle();
+            });
+
         });
     </script>
     <script type="text/x-template" id="layer-switcher">

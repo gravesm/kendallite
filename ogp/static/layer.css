@@ -56,6 +56,28 @@ h3 {
     border-bottom: 1px solid #eee;
 }
 
+h3:hover {
+    cursor: pointer;
+}
+
+h3:before {
+    font-family: 'Glyphicons Halflings';
+    content: "\e081";
+    font-size: 75%;
+    margin-right: 10px;
+}
+
+h3.expanded:before {
+    font-family: 'Glyphicons Halflings';
+    content: "\e082";
+    font-size: 75%;
+    margin-right: 10px;
+}
+
+h3:hover:before {
+    color: #428bce;
+}
+
 h4 {
     margin-left: 10px;
 }
