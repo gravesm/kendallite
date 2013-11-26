@@ -1,7 +1,9 @@
-from tornado.web import Application
-from conf import settings
+from flask import Flask
+import os
 
-def Kendallite():
-    routes = settings.URLS
-    return Application(routes.urls, debug=True, template_path='ogp/templates/',
-        static_path='ogp/static')
+os.environ.setdefault("KENDALLITE_SETTINGS", "application/settings.py")
+
+app = Flask(__name__)
+app.config.from_envvar('KENDALLITE_SETTINGS')
+
+import application.views

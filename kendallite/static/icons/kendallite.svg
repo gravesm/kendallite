@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="kendallite.svg">
+  <defs
+     id="defs4">
+    <font
+       horiz-adv-x="1024"
+       id="font2985"
+       inkscape:label="font 1"
+       horiz-origin-x="0"
+       horiz-origin-y="0"
+       vert-origin-x="45"
+       vert-origin-y="90"
+       vert-adv-y="90">
+      <font-face
+         units-per-em="1024"
+         id="font-face2987"
+         font-family="Kendallite" />
+      <missing-glyph
+         d="M0,0h1000v1024h-1000z"
+         id="missing-glyph2989" />
+      <glyph
+         glyph-name="glyph 1"
+         id="glyph3041"
+         unicode=""
+         d="m 199.4375,355.85657 -125.84375,-50 L 512,131.63782 l 438.40625,174.21875 -125.84375,50 L 512,231.63782 199.4375,355.85657 z m 0,-159.68482 -125.84375,-50 L 512,-28.047 l 438.40625,174.21875 -125.84375,50 L 512,71.953 199.4375,196.17175 z M 511.91882,644.0846 950.32497,469.88153 511.91878,295.67844 73.512629,469.88151 z" />
+    </font>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="464.97733"
+     inkscape:cy="455.35745"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-grids="false"
+     inkscape:window-width="1117"
+     inkscape:window-height="929"
+     inkscape:window-x="27"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2991"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-28.362183)">
+    <path
+       id="rect2993-8-6"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#7d7d7d;stroke-width:0.63036138;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 199.4375,668.14343 -125.84375,50 L 512,892.36218 950.40625,718.14343 824.5625,668.14343 512,792.36218 199.4375,668.14343 z m 0,159.68482 -125.84375,50 L 512,1052.047 950.40625,877.82825 824.5625,827.82825 512,952.047 199.4375,827.82825 z M 511.91882,379.9154 950.32497,554.11847 511.91878,728.32156 73.512629,554.11849 z" />
+  </g>
+</svg>

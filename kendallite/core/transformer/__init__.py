@@ -1,10 +1,10 @@
 from lxml import etree
 import StringIO
-from kendallite.conf import settings
+from kendallite import app
 
 def _get_transform():
     """Returns an FGDC XSLT transformer."""
-    with open(settings.FGDC_XSL, 'r') as fp:
+    with open(app.config.get('FGDC_XSL'), 'r') as fp:
         f = StringIO.StringIO(fp.read())
 
         xslt = etree.parse(f)
@@ -14,7 +14,7 @@ def _get_transform():
 ##
 # Load the transformer on server start and cache for future use.
 ##
-if settings.DEBUG:
+if app.debug:
     fgdc_transform = lambda x: _get_transform()(x)
 else:
     fgdc_transform = _get_transform()

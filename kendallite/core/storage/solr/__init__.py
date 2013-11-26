@@ -1,8 +1,6 @@
-from tornado.httpclient import AsyncHTTPClient
-from tornado.httputil import url_concat
+import requests
 import json
-from tornado import gen
-from kendallite.conf import settings
+from kendallite import app
 
 def load_layer(layer, *args, **kwargs):
 
@@ -16,9 +14,7 @@ def load_layer(layer, *args, **kwargs):
             if v.name in doc:
                 setattr(layer, k, v.add_to_class(doc[v.name]))
 
-@gen.coroutine
 def get_layer(cls, id):
-    http = get_client()
 
     fields = (
         'Access', 'Location', 'LayerDisplayName', 'FgdcText', 'PlaceKeywords',
@@ -32,12 +28,8 @@ def get_layer(cls, id):
         'fl': (',').join(fields),
         'rows': 1
     }
-    url = "{0}/select/".format(settings.SOLR_URL.rstrip("/"))
-    response = yield http.fetch(url_concat(url, params))
 
-    layer = cls(response.body)
+    url = "{0}/select/".format(app.config.get('SOLR_URL').rstrip("/"))
+    res = requests.get(url, params=params)
 
-    raise gen.Return(layer)
-
-def get_client():
-    return AsyncHTTPClient()
+    return cls(res.text)

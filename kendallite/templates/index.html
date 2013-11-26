@@ -7,17 +7,17 @@
         <title>MIT GeoWeb</title>
 
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="{{ static_url('base.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ static_url('search.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ config.STATIC_URL }}base.css" />
+        <link rel="stylesheet" type="text/css" href="{{ config.STATIC_URL }}search.css" />
 
         <script>
             var require = {
                 config: {
                     'app': {
-                        solr: '{{ SOLR_URL }}'
+                        solr: '{{ config.SOLR_URL }}'
                     },
                     'views/item': {
-                        site_root: '{{ SITE_ROOT }}'
+                        site_root: "{{ config.SITE_ROOT }}"
                     }
                 },
                 paths: {
@@ -33,7 +33,7 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-        <script src="{{ static_url('js/libs/jquery.cookie.js') }}"></script>
+        <script src="{{ config.STATIC_URL }}js/libs/jquery.cookie.js"></script>
 
         <script>
             var user;
@@ -41,11 +41,11 @@
             user = $.cookie('kendallite_user');
 
             {% if user %}
-                user = {{ user }};
-            {% end %}
+                user = {{ g.user }};
+            {% endif %}
         </script>
 
-        <script data-main="{{ static_url('js/main') }}" src="{{ static_url('js/libs/require.js') }}"></script>
+        <script data-main="{{ config.STATIC_URL }}js/main" src="{{ config.STATIC_URL }}js/libs/require.js"></script>
 
         <script>
             $(function() {

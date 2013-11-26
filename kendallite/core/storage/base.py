@@ -1,5 +1,4 @@
-from kendallite.conf import settings
-from tornado import gen
+from kendallite.core.storage import engine
 
 class DocBase(type):
 
@@ -24,13 +23,8 @@ class Doc(object):
     __metaclass__ = DocBase
 
     def __init__(self, *args, **kwargs):
-        engine = settings.STORAGE_ENGINE
         engine.load_layer(self, *args, **kwargs)
 
     @classmethod
-    @gen.coroutine
     def get(cls, id):
-        engine = settings.STORAGE_ENGINE
-        layer = yield engine.get_layer(cls, id)
-
-        raise gen.Return(layer)
+        return engine.get_layer(cls, id)

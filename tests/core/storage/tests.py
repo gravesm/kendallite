@@ -1,6 +1,4 @@
 import unittest
-from tornado.testing import AsyncTestCase, gen_test
-from tornado import gen
 from mock import MagicMock, patch
 
 from kendallite.core.storage import fields
@@ -39,21 +37,16 @@ class TestJSONField(unittest.TestCase):
         self.assertEqual(data['bipple'], 'bopple')
 
 
-class TestDoc(AsyncTestCase):
+class TestDoc(unittest.TestCase):
 
-    def ret(self, *args):
-        raise gen.Return(args[1:])
+    def test_get_calls_get_layer(self):
+        with patch('kendallite.core.storage.base.engine') as mock:
+            mock.get_layer = MagicMock()
+            base.Doc.get('Frumripple')
+            mock.get_layer.assert_called_with(base.Doc, 'Frumripple')
 
-    @gen_test
-    def test_get_returns_layer(self):
-        with patch('kendallite.conf.settings.STORAGE_ENGINE') as mock:
-            mock.get_layer = MagicMock(side_effect=self.ret)
-            doc = yield base.Doc.get('Frumripple')
-            mock.get_layer.assert_called()
-            self.assertIn('Frumripple', doc)
-
-    def test_init_calls_load_layer(self):
-        with patch('kendallite.conf.settings.STORAGE_ENGINE') as mock:
+    def test_init_call_load_layer(self):
+        with patch('kendallite.core.storage.base.engine') as mock:
             mock.load_layer = MagicMock()
             doc = base.Doc("Kurpleton")
             mock.load_layer.assert_called_with(doc, "Kurpleton")

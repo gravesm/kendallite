@@ -37,8 +37,8 @@
             });
         });
     </script>
-{% end %}
+{% endblock %}
 
 {% block metadata %}
-    {% raw fgdc %}
-{% end %}
+    {{ fgdc|safe }}
+{% endblock %}

@@ -37,7 +37,7 @@
                 wms = new OpenLayers.Layer.WMS('{{ layer.name }}', [
                     {% for loc in layer.location['wms'] %}
                         '{{ loc }}'
-                    {% end %}
+                    {% endfor %}
                     ], {
                         layers: '{{ layer.layer_name }}',
                         format: "image/png",
@@ -106,7 +106,7 @@
 
                 map.addLayer(preview);
 
-            {% end %}
+            {% endif %}
 
             map.zoomToExtent(box.getBounds());
 
@@ -128,7 +128,7 @@
                 map.setBaseLayer(map.getLayer($(this).data("layerid")));
             });
 
-            login_url = "{{ login_url }}?target=";
+            login_url = "{{ config.SHIB_LOGIN_URL }}?target=";
             $("#login").attr("href", login_url + encodeURIComponent(location.href));
 
             $("[data-toggle=popover]").popover();
@@ -148,7 +148,7 @@
             </a>
         </li>
     </script>
-{% end %}
+{% endblock %}
 
 {% block map_nav %}
     <button class="btn btn-default btn-sm" type="button" title="Zoom to extent of layer"
@@ -168,7 +168,7 @@
                 title="Log in to view layer features">Log in</a>
         {% else %}
             <span class="pull-right glyphicon glyphicon-question-sign help" data-content="This layer cannot be downloaded because it is a restricted layer at another institution." data-placement="left" data-toggle="popover"></span>
-        {% end %}
+        {% endif %}
     {% else %}
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm"
@@ -180,16 +180,16 @@
                 <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
             </ul>
         </div>
-    {% end %}
-{% end %}
+    {% endif %}
+{% endblock %}
 
 {% block map_overlay %}
     {% if authorized %}
         <div class="map-overlay overlay-background"></div>
         <div class="map-overlay overlay-text">Loading layer...</div>
-    {% end %}
-{% end %}
+    {% endif %}
+{% endblock %}
 
 {% block metadata %}
-    {% raw fgdc %}
-{% end %}
+    {{ fgdc|safe }}
+{% endblock %}
