@@ -1,7 +1,7 @@
 Kendallite
 ==========
 
-Kendallite is a `Tornado <http://www.tornadoweb.org/>`_ based application for searching geospatial data. This is based off of the `OpenGeoportal <https://github.com/OpenGeoportal/OGP>`_ and searches a similar Solr index as that project.
+Kendallite is a Web application for searching geospatial data. This is based off of the `OpenGeoportal <https://github.com/OpenGeoportal/OGP>`_ and searches a similar Solr index as that project.
 
 The major difference is that layers and all the functionality for previewing are displayed on a separate page. The cart has been removed and download requests are made directly to the relevant service. Authentication and authorization have been almost entirely removed, since this was designed to run in a Shibboleth environment. The application does not proxy any requests for restricted data. New features include facets and linkable searches.
 
@@ -11,9 +11,11 @@ Usage
 This is still pretty nascent and you are better off with the main OpenGeoportal code base. If you are still interested, the general process is:
 
 1. ``pip install -r requirements.txt``
-2. Modify ogp/settings.py
+2. Modify ``kendallite/application/settings.py``
 3. ``./server.py``
-4. Go to http://localhost:8888/
+4. Go to http://localhost:5000/
+
+This is built with the Flask framework. The Flask application is in ``kendallite/application``. ``kendallite/core`` contains a basic, read-only Solr ORM that lets you declaratively define the data model for a layer. See ``kendallite/application/layer.py``. The main search page for the application is a Backbone app and can be found in ``kendallite/static/js``.
 
 Tests
 -----
