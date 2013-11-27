@@ -17,14 +17,14 @@ module.exports = function(grunt) {
                 options: {
                     specs: "spec/*.spec.js",
                     vendor: [
-                        'ogp/static/js/libs/jquery-1.9.1.min.js',
-                        'ogp/static/js/libs/underscore-min.js'
+                        'kendallite/static/js/libs/jquery-1.9.1.min.js',
+                        'kendallite/static/js/libs/underscore-min.js'
                     ],
                     host: "http://127.0.0.1:8000/",
                     template: require("grunt-template-jasmine-requirejs"),
                     templateOptions: {
                         requireConfig: {
-                            baseUrl: "ogp/static/js",
+                            baseUrl: "kendallite/static/js",
                             paths: {
                                 'text': 'libs/text'
                             }
