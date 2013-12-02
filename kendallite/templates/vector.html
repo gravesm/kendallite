@@ -1,167 +1,30 @@
 {% extends 'base.html' %}
 
 {% block head_content %}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script>
         $(function() {
 
-            var opts, map, box, wms, wfs_control, wfs_tmpl, preview, layer_tmpl,
-                login_url;
+            var login_url;
 
-            map = new OpenLayers.Map({
-                div: "map",
-                projection: "EPSG:900913"
-            });
-
-            map.addLayers([
-                new OpenLayers.Layer.Google("Google Physical", {
-                    type: google.maps.MapTypeId.TERRAIN
-                }),
-                new OpenLayers.Layer.Google("Google Streets"),
-                new OpenLayers.Layer.Google("Google Hybrid", {
-                    type: google.maps.MapTypeId.HYBRID
-                }),
-                new OpenLayers.Layer.Google("Google Satellite", {
-                    type: google.maps.MapTypeId.SATELLITE
-                })
-            ]);
-
-            box = OpenLayers.Geometry.fromWKT('{{ layer.wkt }}');
-            box.transform("EPSG:4326", "EPSG:900913");
+            {% include 'maps/base.js' %}
 
             {% if authorized %}
-
-                /**
-                 * Add WMS layer
-                 */
-                wms = new OpenLayers.Layer.WMS('{{ layer.name }}', [
-                    {% for loc in layer.location['wms'] %}
-                        '{{ loc }}'
-                    {% endfor %}
-                    ], {
-                        layers: '{{ layer.layer_name }}',
-                        format: "image/png",
-                        tiled: true,
-                        exceptions: "application/vnd.ogc.se_inxml",
-                        transparent: true
-                    }, {
-                        transitionEffect: "resize",
-                        opacity: 1
-                    }
-                );
-
-                wms.events.register("loadstart", wms, function() {
-                    $(".map-overlay").show().animate({
-                        opacity: 0.5
-                    }, 300);
-                });
-
-                wms.events.register("loadend", wms, function() {
-                    $(".map-overlay").animate({
-                        opacity: 0
-                    }, 300, function() {
-                        $(this).hide();
-                    });
-                });
-
-                map.addLayer(wms);
-
-                /**
-                 * Add WFS control
-                 */
-                wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: '{{ wfs }}',
-                    layers: [wms],
-                    layerUrls: wms.url,
-                    infoFormat: 'application/vnd.ogc.gml',
-                    vendorParams: {
-                        OGPID: '{{ layer.id }}'
-                    }
-                });
-
-                wfs_tmpl = _.template($("#feature-tmpl").html());
-
-                wfs_control.events.register("getfeatureinfo", this, function(ev) {
-                    $("#features-content").empty();
-                    _.each(ev.features, function(feature) {
-                        $("#features-content").append(wfs_tmpl(feature));
-                    });
-                    $("#features-dialog").modal();
-                });
-
-                map.addControl(wfs_control);
-
-                wfs_control.activate();
-
+                {% include 'maps/wms.js' %}
+                {% include 'maps/wfs.js' %}
             {% else %}
-
-                /**
-                 * Add preview box if user is not authorized to view features
-                 */
-                preview = new OpenLayers.Layer.Vector("Preview Layer", {
-                    projection: "EPSG:4326"
-                });
-
-                preview.addFeatures([new OpenLayers.Feature.Vector(box)]);
-
-                map.addLayer(preview);
-
+                {% include 'maps/preview.js' %}
             {% endif %}
-
-            map.zoomToExtent(box.getBounds());
-
-            $("#zoom-to-layer").on("click", function(ev) {
-                ev.preventDefault();
-                map.zoomToExtent(box.getBounds());
-            });
-
-            layer_tmpl = _.template($("#layer-switcher").html());
-
-            _.each(map.layers, function(layer) {
-                if (layer.isBaseLayer) {
-                    $(".map-layers").append(layer_tmpl(layer));
-                }
-            });
-
-            $(".map-layers").on("click", "a", function(ev) {
-                ev.preventDefault();
-                map.setBaseLayer(map.getLayer($(this).data("layerid")));
-            });
 
             login_url = "{{ config.SHIB_LOGIN_URL }}?target=";
             $("#login").attr("href", login_url + encodeURIComponent(location.href));
 
             $("[data-toggle=popover]").popover();
 
-            $("h3").next("section").toggle();
-            $("h3").on("click", function() {
-                $(this).toggleClass('expanded');
-                $(this).next("section").toggle();
-            });
-
         });
-    </script>
-    <script type="text/x-template" id="layer-switcher">
-        <li>
-            <a href="#" data-layerid="<%= id %>">
-                <%= name %>
-            </a>
-        </li>
     </script>
 {% endblock %}
 
-{% block map_nav %}
-    <button class="btn btn-default btn-sm" type="button" title="Zoom to extent of layer"
-        id="zoom-to-layer">
-        <span class="glyphicon glyphicon-zoom-in"></span>
-    </button>
-    <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle btn-sm"
-            data-toggle="dropdown">
-            Base layers <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu map-layers"></ul>
-    </div>
+{% block download_controls %}
     {% if not authorized %}
         {% if layer.institution.lower() == 'mit' %}
             <a href="#" class="btn btn-sm btn-primary pull-right" id="login"

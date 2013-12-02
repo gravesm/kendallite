@@ -39,11 +39,12 @@ def layer(layer_id):
 
 def render_vector_layer(layer, ctx):
     if (layer.institution.lower() == "mit") and layer.is_restricted:
-        wfs = layer.location['wfs']
+        ctx['wfs'] = layer.location['wfs']
     else:
-        wfs = url_for('wfs')
-    html = transform(layer.fgdc, transformer.fgdc_transform)
-    return render_template('vector.html', layer=layer, fgdc=html, wfs=wfs, **ctx)
+        ctx['wfs'] = url_for('wfs')
+    ctx['wms'] = ",".join(map(lambda x: "'{}'".format(x), layer.location['wms']))
+    ctx['fgdc'] = transform(layer.fgdc, transformer.fgdc_transform)
+    return render_template('vector.html', layer=layer, **ctx)
 
 def render_raster_layer(layer, ctx):
     html = transform(layer.fgdc, transformer.fgdc_transform)

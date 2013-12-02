@@ -3,38 +3,11 @@
 {% block head_content %}
     <script>
         $(function() {
-            var opts = {
-                div: "map",
-                projection: "EPSG:900913"
-            };
-            map = new OpenLayers.Map(opts);
 
-            previewlayer = new OpenLayers.Layer.Vector("Preview Layer", {
-                projection: "EPSG:4326"
-            });
+            {% include 'maps/base.js' %}
 
-            box = OpenLayers.Geometry.fromWKT('{{ layer.wkt }}');
-            box.transform("EPSG:4326", "EPSG:900913");
+            {% include 'maps/preview.js' %}
 
-            var bounds = box.getBounds();
-
-            previewlayer.addFeatures([new OpenLayers.Feature.Vector(box)]);
-
-            map.addLayers([
-                new OpenLayers.Layer.Google("Google Layer"),
-                new OpenLayers.Layer.Google("Google Physical", {
-                    type: google.maps.MapTypeId.TERRAIN
-                }),
-                previewlayer
-            ]);
-
-            map.zoomToExtent(bounds);
-
-            $("h3").next("section").toggle();
-            $("h3").on("click", function() {
-                $(this).toggleClass('expanded');
-                $(this).next("section").toggle();
-            });
         });
     </script>
 {% endblock %}
