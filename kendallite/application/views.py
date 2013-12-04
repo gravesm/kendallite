@@ -42,7 +42,6 @@ def render_vector_layer(layer, ctx):
         ctx['wfs'] = layer.location['wfs']
     else:
         ctx['wfs'] = url_for('wfs')
-    ctx['wms'] = ",".join(map(lambda x: "'{}'".format(x), layer.location['wms']))
     ctx['fgdc'] = transform(layer.fgdc, transformer.fgdc_transform)
     return render_template('vector.html', layer=layer, **ctx)
 

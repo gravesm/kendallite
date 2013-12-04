@@ -2,7 +2,7 @@ var wfs_control, wfs_tmpl;
 
 wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
     url: '{{ wfs }}',
-    layerUrls: [ {{ wms }} ],
+    layerUrls: {{ layer.wms_urls }},
     infoFormat: 'application/vnd.ogc.gml',
     vendorParams: {
         OGPID: '{{ layer.id }}'

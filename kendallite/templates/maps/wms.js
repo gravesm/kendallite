@@ -1,5 +1,6 @@
-var wms_layer = new OpenLayers.Layer.WMS('{{ layer.name }}', [ {{ wms }} ], {
-        layers: '{{ layer.layer_name }}',
+var wms_layer = new OpenLayers.Layer.WMS('{{ layer.name }}',
+    {{ layer.wms_urls }}, {
+        layers: '{{ layer.harvard_layer_name or layer.layer_name }}',
         format: "image/png",
         tiled: true,
         exceptions: "application/vnd.ogc.se_inxml",

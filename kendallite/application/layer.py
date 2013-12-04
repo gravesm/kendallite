@@ -25,6 +25,19 @@ class Layer(base.Doc):
         return "{}:{}".format(self._workspace_name, self._name)
 
     @property
+    def harvard_layer_name(self):
+        """Return the layer's name for locating in Harvard's tilecache.
+
+        This is analagous to the layer_name property, except that layers are
+        identified differently when pulling from Harvard's instance of
+        tilecache.
+
+        """
+        if self.institution.lower() in ('harvard',):
+            return self._name.split(".", 1)[1]
+        return None
+
+    @property
     def is_vector(self):
         return self.datatype.lower() in ('point', 'line', 'polygon',)
 
@@ -38,7 +51,7 @@ class Layer(base.Doc):
 
     @property
     def wkt(self):
-
+        """Return a WKT representation of the bounding box."""
         wkt = "POLYGON(({} {}, {} {}, {} {}, {} {}, {} {}))".format(
             self.minx, self.miny, # SW
             self.maxx, self.miny, # SE
@@ -46,5 +59,19 @@ class Layer(base.Doc):
             self.minx, self.maxy, # NW
             self.minx, self.miny # SW
         )
-
         return wkt
+
+    @property
+    def wms_urls(self):
+        """Return a string representation of the list of WMS URLs.
+
+        This can be used directly as, for example, a JavaScript array in
+        OpenLayers. Preference is given to tilecache URLs if present.
+
+        """
+        f = lambda x: "'{}'".format(x)
+        g = lambda y: ",".join(map(f, y))
+
+        if ('tilecache' in self.location):
+            return "[{}]".format(g(self.location['tilecache']))
+        return "[{}]".format(g(self.location['wms']))
