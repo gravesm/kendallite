@@ -21,7 +21,14 @@ def wfs():
     if layer.is_restricted:
         abort(403)
 
-    res = requests.get(layer.location['wfs'], params=request.args)
+    # Because Harvard tilecache layers have a different name than what's in
+    # Geoserver we need to correct the layer names in the GetFeatureInfo request
+    params = request.args.copy()
+    params['LAYERS'] = layer.layer_name
+    params['QUERY_LAYERS'] = layer.layer_name
+    params.pop('OGPID')
+
+    res = requests.get(layer.location['wfs'], params=params)
     return res.text
 
 @app.route('/layer/<layer_id>/')
