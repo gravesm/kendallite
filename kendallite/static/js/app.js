@@ -83,6 +83,7 @@ var App = Backbone.View.extend({
 
         this.listenTo(Query, "change", this.search);
         this.listenTo(Query, "change", Hash.update);
+        this.listenTo(Query, "change", this.updateFilterCount);
 
         /* Once the application state is initialized, trigger the search. */
         Query.trigger("change", Query);
@@ -190,6 +191,16 @@ var App = Backbone.View.extend({
             bounds: bounds.toString()
         });
 
+    },
+
+    /**
+     * Updates the UI to show number of active filters.
+     */
+    updateFilterCount: function(query) {
+        var count =
+            (query.get("DataTypeSort") || []).length +
+            (query.get("InstitutionSort") || []).length;
+        $("#active-filters").text('' + (count || ''));
     },
 
     /**
