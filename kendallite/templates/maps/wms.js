@@ -26,3 +26,7 @@ wms_layer.events.register("loadend", wms_layer, function() {
 });
 
 map.addLayer(wms_layer);
+
+$("#opacity").slider().on("slide", function(ev) {
+    wms_layer.setOpacity($(this).val() / 100);
+});

@@ -19,6 +19,15 @@
     color: #428bca;
 }
 
+#opacity-slider {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#opacity {
+    width: 100px;
+}
+
 .layer-info dd {
     margin-left: 10px;
     margin-bottom: 10px;

@@ -2,6 +2,10 @@ html, body {
     height: 100%;
 }
 
+.container {
+    padding-bottom: 50px;
+}
+
 .navbar {
     border-bottom: thin solid #66afe9;
 }
