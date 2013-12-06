@@ -1,5 +1,5 @@
 from kendallite import app
-from kendallite.application.layer import Layer
+from kendallite.site.layer import Layer
 from kendallite.core import transformer
 from flask import render_template, request, g, abort, url_for
 import requests
