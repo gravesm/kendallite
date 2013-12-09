@@ -13,7 +13,9 @@
 
             {% if authorized %}
                 {% include 'maps/wms.js' %}
-                {% include 'maps/wfs.js' %}
+                {% if wfs %}
+                    {% include 'maps/wfs.js' %}
+                {% endif %}
             {% else %}
                 {% include 'maps/preview.js' %}
             {% endif %}
@@ -37,7 +39,7 @@
         {% endif %}
     {% else %}
         <input id="opacity" type="text" data-slider-min="0" data-slider-max="100"
-            data-slider-step="1" data-slider-value="100" data-slider-id="opacity-slider" />
+            data-slider-step="1" data-slider-value="85" data-slider-id="opacity-slider" />
         <span>Opacity</span>
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm"

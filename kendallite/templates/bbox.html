@@ -3,15 +3,8 @@
 {% block head_content %}
     <script>
         $(function() {
-
             {% include 'maps/base.js' %}
-
             {% include 'maps/preview.js' %}
-
         });
     </script>
-{% endblock %}
-
-{% block metadata %}
-    {{ fgdc|safe }}
 {% endblock %}

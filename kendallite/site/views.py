@@ -38,23 +38,16 @@ def layer(layer_id):
     context = { "authorized": authorized(layer) }
 
     if layer.is_vector:
-        return render_vector_layer(layer, context)
-    elif layer.is_raster:
-        return render_raster_layer(layer, context)
-    else:
-        return render_template('nongeo.html', layer=layer, **context)
+        if (layer.institution.lower() == "mit") and layer.is_restricted:
+            context['wfs'] = layer.location['wfs']
+        else:
+            context['wfs'] = url_for('wfs')
 
-def render_vector_layer(layer, ctx):
-    if (layer.institution.lower() == "mit") and layer.is_restricted:
-        ctx['wfs'] = layer.location['wfs']
+    if layer.is_vector or layer.is_raster:
+        context['fgdc'] = transform(layer.fgdc, transformer.fgdc_transform)
+        return render_template('tiled.html', layer=layer, **context)
     else:
-        ctx['wfs'] = url_for('wfs')
-    ctx['fgdc'] = transform(layer.fgdc, transformer.fgdc_transform)
-    return render_template('vector.html', layer=layer, **ctx)
-
-def render_raster_layer(layer, ctx):
-    html = transform(layer.fgdc, transformer.fgdc_transform)
-    return render_template('raster.html', layer=layer, fgdc=html, **ctx)
+        return render_template('bbox.html', layer=layer, **context)
 
 def transform(xml, transform):
     root = etree.XML(xml.strip().encode('utf-8'))
