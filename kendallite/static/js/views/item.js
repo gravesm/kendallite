@@ -1,6 +1,6 @@
 define([
     'text!tmpl/item.html',
-    'map/map',
+    'map',
     'module',
 ], function(Tmpl, Map, module) {
 

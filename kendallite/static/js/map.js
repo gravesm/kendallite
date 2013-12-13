@@ -44,10 +44,10 @@ var Map = function() {
             previewlayer
         ]);
 
-        if (opts.bounds && opts.zoom) {
-            center = new OpenLayers.Bounds(opts.bounds.split(",")).getCenterLonLat();
+        if (opts.b && opts.z) {
+            center = new OpenLayers.Bounds(opts.b.split(",")).getCenterLonLat();
             center.transform("EPSG:4326", "EPSG:900913");
-            map.setCenter(center, opts.zoom);
+            map.setCenter(center, opts.z);
         } else {
             map.zoomToMaxExtent();
         }

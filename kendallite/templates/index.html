@@ -14,7 +14,24 @@
             var require = {
                 config: {
                     'app': {
-                        solr: '{{ config.SOLR_URL }}'
+                        solr: '{{ config.SOLR_URL }}',
+                        solr_defaults: {
+                            wt: "json",
+                            q: "*:*",
+                            facet: true,
+                            "facet.field": [
+                                "{!ex=inst key=in}InstitutionSort",
+                                "{!ex=dt key=dt}DataTypeSort"
+                            ],
+                            "facet.range": "{!ex=df}ContentDate",
+                            "facet.range.start": "1900-01-01T01:01:01Z",
+                            "facet.range.end": "NOW",
+                            "facet.range.gap": "+10YEAR",
+                            "facet.range.other": "before",
+                            sort: "score desc, LayerDisplayName asc",
+                            defType: "edismax",
+                            fl: "Access,Area,CenterX,CenterY,DataType,DataTypeSort,HalfHeight,HalfWidth,Institution,InstitutionSort,LayerDisplayName,LayerId,Location,MaxX,MaxY,MinX,MinY,Name,WorkspaceName"
+                        }
                     },
                     'views/item': {
                         site_root: "{{ config.SITE_ROOT }}"

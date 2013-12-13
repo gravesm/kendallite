@@ -1,7 +1,7 @@
 define([
     'models/query',
     'views/item'
-], function(Query, ItemView) {
+], function(query, ItemView) {
 
     /**
      * Handles interaction in the results tab.
@@ -16,13 +16,13 @@ define([
 
         reload: function(collection, opts) {
 
-            if (Query.get("start") > 0) {
+            if (query.get("qs") > 0) {
                 $(".previous").css("visibility", "visible");
             } else {
                 $(".previous").css("visibility", "hidden");
             }
 
-            if (Query.get("start") + this.options.results.windowsize < Query.get("total")) {
+            if (query.get("qs") + this.options.results.windowsize < query.get("total")) {
                 $(".next").css("visibility", "visible");
             } else {
                 $(".next").css("visibility", "hidden");

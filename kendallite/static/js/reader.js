@@ -98,6 +98,6 @@ define(function() {
 
     IndexReader.prototype = methods;
 
-    return IndexReader;
+    return new IndexReader();
 
 });

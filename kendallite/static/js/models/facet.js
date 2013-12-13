@@ -5,6 +5,9 @@ return Backbone.Model.extend({
     initialize: function() {
         this.items = new Backbone.Collection();
 
+        /**
+         * Sorts items in a facet by selected first.
+         */
         this.items.comparator = function(item1, item2) {
             var s_1 = item1.get("selected");
             var s_2 = item2.get("selected");

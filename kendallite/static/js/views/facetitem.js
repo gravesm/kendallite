@@ -1,7 +1,7 @@
 define([
     'text!tmpl/facetitem.html',
-    'models/query'
-], function(Tmpl, Query) {
+    'locationhash'
+], function(Tmpl, hash) {
 
 return Backbone.View.extend({
 
@@ -30,16 +30,17 @@ return Backbone.View.extend({
 
     select: function(ev) {
 
-        var value, name, items;
+        var value, name,
+            params = {};
 
         value = this.model.get('value');
         name = this.options.facet;
-        items = Query.get(name) || [];
 
-        if ( $(ev.currentTarget).is(":checked") ) {
-            Query.set( name, _.union(items, [value]) );
+        if ($(ev.currentTarget).is(":checked")) {
+            params[name] = value;
+            hash.update(params, true);
         } else {
-            Query.set( name, _.difference(items, [value]) );
+            hash.remove(name, value);
         }
 
     }

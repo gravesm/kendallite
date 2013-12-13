@@ -1,7 +1,7 @@
 define([
     'views/facetitem',
-    'models/query'
-], function(FacetView, Query) {
+    'locationhash'
+], function(FacetView, hash) {
 
     return Backbone.View.extend({
 
@@ -15,7 +15,7 @@ define([
             var name = this.model.get("name");
 
             collection.each(function(item) {
-                if (_.contains(Query.get(name), item.get("value"))) {
+                if (_.contains(_.flatten([hash.get(name)]), item.get("value"))) {
                     item.set("selected", true);
                 }
             });

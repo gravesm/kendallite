@@ -1,25 +1,20 @@
 require([
     'app',
-    'map/map',
+    'map',
     'locationhash'
-], function(App, Map, Hash) {
+], function(App, Map, hash) {
 
 /**
  * Entry point for the application.
  */
 $(function() {
 
-    var hash, opts;
+    var params, opts;
 
-    hash = Hash.getHash();
-    opts = {};
-
-    if (hash.b && hash.z) {
-        opts['bounds'] = hash.b;
-        opts['zoom'] = parseInt(hash.z);
-    }
-
-    Map.initialize(opts);
+    Map.initialize({
+        b: hash.get('b'),
+        z: hash.get('z')
+    });
 
     App.run();
 

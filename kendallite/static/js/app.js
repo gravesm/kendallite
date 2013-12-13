@@ -1,18 +1,14 @@
 define([
-    'collections/results',
     'controllers/resultscontroller',
-    'collections/facets',
     'controllers/facetscontroller',
     'models/facet',
-    'map/map',
+    'models/item',
+    'map',
     'module',
     'models/query',
-    'locationhash',
-    'solr/requestqueue',
-    'solr/solr',
-    'solr/ogprequest'
-], function(Results, ResultsController, Facets, FacetView,
-                Facet, Map, module, Query, Hash, RQ, Solr, OGP) {
+    'reader',
+    'locationhash'
+], function(ResultsController, FacetView, Facet, Item, Map, module, query, reader, hash) {
 
 _.templateSettings.variable = "o";
 
@@ -24,8 +20,6 @@ _.templateSettings.variable = "o";
 var results_state = {
     windowsize: 0
 };
-
-var solr_url = module.config().solr;
 
 /**
  * Main application view.
@@ -42,51 +36,43 @@ var App = Backbone.View.extend({
         "click .next a": "nextPage"
     },
 
-    /**
-     * Initializes the Backbone application. Mostly, this sets up event listeners
-     * for the various parts of the UI.
-     */
     initialize: function() {
 
-        var hash, opts;
+        var map = Map.map();
 
-        this.results = new Results();
-        this.facets = new Facets();
-        this.req = new RQ(100);
+        this.results = new Backbone.Collection([], {
+            model: Item
+        });
 
-        hash = Hash.getHash();
+        this.facets = new Backbone.Collection([], {
+            model: Facet
+        });
 
         Map.map().events.register("moveend", this, this.setBounds);
 
-        if (hash.q) {
-            Query.set("keyword", hash.q);
-            $("#search-form input[name='keyword']").val(hash.q);
+        $("#search-form input[name='keyword']").val(hash.get('q'));
+        if (hash.get('geofilter')) {
+            $("input[name='limit']").prop("checked", true);
         }
 
-        if (hash.qs) {
-            Query.set("start", hash.qs);
-        }
+        this.listenTo(query, "sync", this._search);
+        this.listenTo(query, "change", this.updateFilterCount);
+        query.fetch();
 
-        if (hash.b) {
-            Query.set("bounds", hash.b);
-        } else {
-            Query.set("bounds", "-180,-90,180,90");
-        }
+        $(window).on("hashchange", function() {
+            var b,
+                bounds = hash.get('b'),
+                zoom = hash.get('z');
 
-        if (hash.dt) {
-            Query.set("DataTypeSort", hash.dt.split(";"));
-        }
+            query.fetch();
 
-        if (hash.is) {
-            Query.set("InstitutionSort", hash.is.split(";"));
-        }
-
-        this.listenTo(Query, "change", this.search);
-        this.listenTo(Query, "change", Hash.update);
-        this.listenTo(Query, "change", this.updateFilterCount);
-
-        /* Once the application state is initialized, trigger the search. */
-        Query.trigger("change", Query);
+            if (bounds) {
+                b = new OpenLayers.Bounds(bounds.split(","))
+                            .transform("EPSG:4326", "EPSG:900913");
+                Map.map().setCenter(b.getCenterLonLat(), zoom, true);
+                map.getLayersByName("Preview Layer")[0].redraw();
+            }
+        });
 
         new ResultsController({
             collection: this.results,
@@ -95,19 +81,63 @@ var App = Backbone.View.extend({
         });
 
         /* Set up facets. */
-        this.facets.add(new Facet({name: "InstitutionSort"}));
-        this.facets.add(new Facet({name: "DataTypeSort"}));
+        this.facets.add(new Facet({name: "in"}));
+        this.facets.add(new Facet({name: "dt"}));
 
         new FacetView({
-            model: this.facets.findWhere({name: "InstitutionSort"}),
+            model: this.facets.findWhere({name: "in"}),
             el: $("#facet-institution"),
             dialog: $("#facet-institution-dialog")
         });
 
         new FacetView({
-            model: this.facets.findWhere({name: "DataTypeSort"}),
+            model: this.facets.findWhere({name: "dt"}),
             el: $("#facet-datatype"),
             dialog: $("#facet-datatype-dialog")
+        });
+
+    },
+
+    _search: function(query) {
+        var q, results, facets, params;
+
+        $(".results-mask").show();
+
+        results = this.results;
+        facets = this.facets;
+
+        q = query.qstring();
+        q.start = parseInt(query.get('qs')) || 0;
+        q.rows = results_state.windowsize || 15;
+
+        params = $.extend({}, module.config().solr_defaults, q);
+
+        $.ajax({
+            url: module.config().solr + "select/",
+            data: params,
+            traditional: true,
+            dataType: "json"
+        }).done(function(data) {
+
+            var res = reader.read(data);
+
+            query.set({
+                    total: res.total
+                }, {
+                    silent: true
+            });
+
+            results.reset(res.results);
+
+            _.each(res.facets, function(facet) {
+                var f = facets.findWhere({name: facet.name});
+
+                if (f) {
+                    f.items.reset(facet.counts);
+                }
+            });
+
+            $(".results-mask").hide();
         });
 
     },
@@ -120,12 +150,10 @@ var App = Backbone.View.extend({
         var start;
 
         ev.preventDefault();
-
         $(".results-mask").show();
 
-        start = Query.get("start") || 0;
-
-        Query.set("start", start + results_state.windowsize);
+        start = parseInt(query.get("qs")) || 0;
+        hash.update({qs: start + results_state.windowsize});
 
     },
 
@@ -137,20 +165,18 @@ var App = Backbone.View.extend({
         var start;
 
         ev.preventDefault();
-
         $(".results-mask").show();
 
-        start = Query.get("start");
+        start = parseInt(query.get("qs"));
         start = start - results_state.windowsize;
         start = (start < 0) ? 0 : start;
-
-        Query.set("start", start);
+        hash.update({qs: start});
 
     },
 
     setGeofilter: function(ev) {
-        Query.set({
-            start: 0,
+        hash.update({
+            qs: 0,
             geofilter: $(ev.currentTarget).is(":checked")
         });
     },
@@ -167,10 +193,9 @@ var App = Backbone.View.extend({
         ev.preventDefault();
 
         keyword = $(ev.currentTarget).find("input[name='keyword']").val();
-
-        Query.set({
-            start: 0,
-            keyword: keyword
+        hash.update({
+            qs: 0,
+            q: keyword
         });
 
     },
@@ -185,10 +210,10 @@ var App = Backbone.View.extend({
         var bounds;
 
         bounds = Map.map().getExtent().transform("EPSG:900913", "EPSG:4326");
-
-        Query.set({
-            start: 0,
-            bounds: bounds.toString()
+        hash.update({
+            qs: 0,
+            b: bounds.toString(),
+            z: Map.map().getZoom()
         });
 
     },
@@ -198,8 +223,8 @@ var App = Backbone.View.extend({
      */
     updateFilterCount: function(query) {
         var count =
-            (query.get("DataTypeSort") || []).length +
-            (query.get("InstitutionSort") || []).length;
+            (query.get("dt") || []).length +
+            (query.get("in") || []).length;
         $("#active-filters").text('' + (count || ''));
     },
 
@@ -236,72 +261,6 @@ var App = Backbone.View.extend({
             Map.map().zoomToExtent(bounds);
 
         });
-    },
-
-    /**
-     * Perform a new Solr search.
-     *
-     * When the search completes, the contents of the results and facets
-     * collections are replaced, triggering a refresh of the interface.
-     */
-    search: function(query, opts) {
-
-        var geosearch, q, results, facets;
-
-        $(".results-mask").show();
-
-        geosearch = new OGP({
-            bounds: new OpenLayers.Bounds(query.get("bounds").split(",")),
-            terms: query.get("keyword"),
-            datatypes: query.get("DataTypeSort"),
-            institutions: query.get("InstitutionSort"),
-            places: query.get("PlaceKeywordsSort"),
-            dates: query.get("ContentDate"),
-            geofilter: query.get("geofilter"),
-            boosts: {
-                area: 1.0,
-                center: 1.0,
-                intx: 1.0,
-                name: 1.0,
-                publisher: 1.0,
-                originator: 1.0,
-                place_keywords: 2.5
-            }
-        });
-
-        q = geosearch.getSearchParams();
-
-        q.start = query.get("start") || 0;
-        q.rows = results_state.windowsize || 15;
-
-        results = this.results;
-        facets = this.facets;
-
-        this.req.queueRequest(
-            new Solr(q, {solr: solr_url}), this
-        ).done(function(data) {
-
-            query.set({
-                    total: data.total,
-                    start: data.start
-                }, {
-                    silent: true
-            });
-
-            results.reset(data.results);
-
-            _.each(data.facets, function(facet) {
-                var f = facets.findWhere({name: facet.name});
-
-                if (f) {
-                    f.items.reset(facet.counts);
-                }
-            });
-
-            $(".results-mask").hide();
-
-        });
-
     }
 
 });
