@@ -1,7 +1,7 @@
 define(function() {
 
     var set = _.throttle(function(obj) {
-        window.location.hash = $.param(obj, true);
+        window.location.hash = $.param(obj, true).replace(/\+/g, '%20');
     }, 100, {leading: false});
 
     var Hash = function() {
