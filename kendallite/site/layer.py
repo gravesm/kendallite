@@ -22,7 +22,7 @@ class Layer(base.Doc):
 
     @property
     def layer_name(self):
-        return "{}:{}".format(self._workspace_name, self._name)
+        return "{0}:{1}".format(self._workspace_name, self._name)
 
     @property
     def harvard_layer_name(self):
@@ -52,7 +52,7 @@ class Layer(base.Doc):
     @property
     def wkt(self):
         """Return a WKT representation of the bounding box."""
-        wkt = "POLYGON(({} {}, {} {}, {} {}, {} {}, {} {}))".format(
+        wkt = "POLYGON(({0} {1}, {2} {3}, {4} {5}, {6} {7}, {8} {9}))".format(
             self.minx, self.miny, # SW
             self.maxx, self.miny, # SE
             self.maxx, self.maxy, # NE
@@ -69,9 +69,9 @@ class Layer(base.Doc):
         OpenLayers. Preference is given to tilecache URLs if present.
 
         """
-        f = lambda x: "'{}'".format(x)
+        f = lambda x: "'{0}'".format(x)
         g = lambda y: ",".join(map(f, y))
 
         if ('tilecache' in self.location):
-            return "[{}]".format(g(self.location['tilecache']))
-        return "[{}]".format(g(self.location['wms']))
+            return "[{0}]".format(g(self.location['tilecache']))
+        return "[{0}]".format(g(self.location['wms']))
