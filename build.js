@@ -1,8 +1,7 @@
 ({
-    appDir: "src",
+    appDir: "kendallite/static",
     baseUrl: "js",
-    mainConfigFile: "src/config.js",
-    dir: "target",
+    dir: "target-static",
     removeCombined: true,
     name: "main"
 })
