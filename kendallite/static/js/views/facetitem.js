@@ -13,7 +13,8 @@ return Backbone.View.extend({
         "change input": "select"
     },
 
-    initialize: function() {
+    initialize: function(opts) {
+        this.options = opts;
         this.template = _.template(Tmpl);
     },
 

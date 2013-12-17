@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block head_content %}
-    <link rel="stylesheet" type="text/css"
-        href="{{ config.STATIC_URL }}bootstrap-slider.min.css" />
-    <script src="{{ config.STATIC_URL}}js/libs/bootstrap-slider.min.js"></script>
+    <link href="{{ config.STATIC_URL }}bootstrap-slider/bootstrap-slider.css"
+        rel="stylesheet" type="text/css" />
+    <script src="{{ config.STATIC_URL}}bootstrap-slider/bootstrap-slider.js"></script>
     <script>
         $(function() {
 
@@ -35,7 +35,9 @@
             <a href="#" class="btn btn-sm btn-primary pull-right" id="login"
                 title="Log in to view layer features">Log in</a>
         {% else %}
-            <span class="pull-right glyphicon glyphicon-question-sign help" data-content="This layer cannot be downloaded because it is a restricted layer at another institution." data-placement="left" data-toggle="popover"></span>
+            <span class="pull-right glyphicon glyphicon-question-sign help"
+                data-content="This layer cannot be downloaded because it is a restricted layer at another institution."
+                data-placement="left" data-toggle="popover" data-trigger="hover"></span>
         {% endif %}
     {% else %}
         <input id="opacity" type="text" data-slider-min="0" data-slider-max="100"

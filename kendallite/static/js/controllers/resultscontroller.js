@@ -10,7 +10,8 @@ define([
 
         el: $("#results"),
 
-        initialize: function() {
+        initialize: function(opts) {
+            this.options = opts;
             this.collection.on("reset", this.reload, this);
         },
 

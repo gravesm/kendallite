@@ -1,0 +1,53 @@
+html, body {
+    height: 100%;
+}
+
+.container {
+    padding-bottom: 50px;
+}
+
+.navbar {
+    border-bottom: thin solid #66afe9;
+}
+
+.navbar-fixed-top {
+    background-color: rgba(255,255,255,0.92);
+}
+
+.navbar-static-top {
+    background-color: #fff;
+}
+
+.navbar-header {
+    font-size: 34px;
+    padding-left: 20px;
+    font-family: "Palatino", "Palatino Linotype", "Bitstream Charter", Georgia, serif;
+}
+
+.navbar-header .blue {
+    color: #428bca;
+}
+
+.navbar-header a {
+    text-decoration: none;
+    color: #333;
+}
+
+.navbar-left {
+    margin-left: 30px;
+}
+
+.navbar-nav.navbar-right:last-child {
+    margin-right: 0;
+}
+
+.navbar-nav>li>a {
+    border-top: 2px solid transparent;
+}
+.navbar-nav>li>a:hover {
+    border-top: 2px solid #66afe9;
+}
+
+.navbar-nav>li>a:focus {
+    background-color: transparent;
+}

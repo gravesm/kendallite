@@ -1,0 +1,119 @@
+@import url('base.css');
+
+.wrapper {
+    height: 100%;
+    padding-top: 50px;
+}
+
+#filters {
+    position: relative;
+    background-color: rgba(255,255,255,0.92);
+    z-index: 2;
+    display: none;
+    border-bottom: thin solid #66afe9;
+}
+
+#map {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+}
+
+#search {
+    position: relative;
+    top: 30px;
+    left: 30px;
+    width: 30%;
+    max-width: 400px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#search-form {
+    margin-bottom: 5px;
+}
+
+#search-form .checkbox {
+    background-color: rgba(255,255,255,0.9);
+    padding: 3px 10px 3px;
+    border-radius: 3px;
+    color: #8e8e8e;
+}
+
+#search-form .checkbox label {
+    margin-left: 10px;
+}
+
+#search-form input[type="checkbox"] {
+    margin-left: 0;
+}
+
+.results-container {
+    position: relative;
+}
+
+.results-mask {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 2;
+    background-color: rgba(255,255,255,0.85);
+    border-radius: 5px;
+}
+
+.search-results {
+    border: thin solid #66afe9;
+    overflow: hidden;
+}
+
+.search-result {
+    padding: 5px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.92);
+}
+
+.search-nav {
+    text-align: center;
+    border: thin solid #66afe9;
+    background-color: rgba(255,255,255,0.9);
+    opacity: 0.0;
+}
+
+.search-nav a {
+    display: block;
+}
+
+.next {
+    border-top: 0;
+    border-radius: 0 0 5px 5px;
+}
+
+.previous {
+    border-bottom: 0;
+    border-radius: 5px 5px 0 0;
+}
+
+.text-result {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#filters .checkbox:last-child {
+    margin-bottom: 3px;
+}
+
+#filters a {
+    margin-left: 15px;
+}
+
+.control-element {
+    float: right;
+    position: relative;
+    margin-top: 20px;
+    margin-right: 10px;
+}

@@ -5,9 +5,9 @@ define([
 
     return Backbone.View.extend({
 
-        initialize: function() {
+        initialize: function(opts) {
             this.model.items.on("reset", this.refresh, this);
-            this.$dialog = this.options.dialog.find('.modal-body');
+            this.$dialog = opts.dialog.find('.modal-body');
         },
 
         refresh: function(collection, opts) {
