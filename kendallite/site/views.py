@@ -8,7 +8,7 @@ from lxml import etree
 
 @app.before_request
 def authenticate():
-    g.user = request.headers.get('Remote_user')
+    g.user = request.environ.get('REMOTE_USER')
 
 @app.route('/')
 def index():

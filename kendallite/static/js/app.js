@@ -310,6 +310,14 @@ return {
 
         });
 
+        $(".login-close").on("click", function() {
+            $.cookie('kendallite_user', 'anonymous');
+        });
+
+        if (typeof user === "undefined") {
+            $("#login-dialog").modal();
+        }
+
         return new App();
     }
 };

@@ -53,28 +53,14 @@
         <script>
             var user;
 
-            user = $.cookie('kendallite_user');
-
-            {% if user %}
-                user = {{ g.user }};
+            {% if g.user %}
+                user = '{{ g.user }}';
+            {% else %}
+                user = $.cookie('kendallite_user');
             {% endif %}
         </script>
 
         <script data-main="{{ config.STATIC_URL }}js/main" src="{{ config.STATIC_URL }}libs/require.js"></script>
-
-        <script>
-            $(function() {
-
-                $(".login-close").on("click", function() {
-                    $.cookie('kendallite_user', 'anonymous');
-                });
-
-                if (typeof user === "undefined") {
-                    $("#login-dialog").modal();
-                }
-
-            });
-        </script>
     </head>
     <body>
         <div class="wrapper">
