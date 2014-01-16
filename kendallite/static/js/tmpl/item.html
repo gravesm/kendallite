@@ -1,4 +1,9 @@
 <div class="text-result" title="<%= o.LayerDisplayName %>">
+    <%  if (o.Access == 'Restricted' && !(user && o.Institution == 'MIT')) {
+            print('<span class="glyphicon glyphicon-lock" title="This is a restricted layer"></span>');
+        } else {
+            print('<span class="glyphicon"></span>');
+        } %>
     <a href="#" class="zoom" title="Zoom to layer"><span class="glyphicon glyphicon-zoom-in"></span></a>
     <a href="<%= o.site_root %>/layer/<%= o.LayerId %>"><%= o.LayerDisplayName %></a>
 </div>

@@ -311,7 +311,7 @@ return {
         });
 
         $(".login-close").on("click", function() {
-            $.cookie('kendallite_user', 'anonymous');
+            $.cookie('kendallite_user', '');
         });
 
         if (typeof user === "undefined") {
