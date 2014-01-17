@@ -35,9 +35,13 @@
             <a href="#" class="btn btn-sm btn-primary pull-right" id="login"
                 title="Log in to view layer features">Log in</a>
         {% else %}
-            <span class="pull-right glyphicon glyphicon-question-sign help"
-                data-content="This layer cannot be downloaded because it is a restricted layer at another institution."
-                data-placement="left" data-toggle="popover" data-trigger="hover"></span>
+            <div class="pull-right" style="display:inline-block" data-toggle="popover"
+                data-placement="left" data-trigger="hover"
+                data-content="This layer cannot be downloaded because it is a restricted layer at another institution.">
+                <button class="btn btn-sm" type="button" disabled="disabled">
+                    Download
+                </button>
+            </div>
         {% endif %}
     {% else %}
         <input id="opacity" type="text" data-slider-min="0" data-slider-max="100"
