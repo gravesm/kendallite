@@ -1,7 +1,7 @@
 from kendallite import app
 from kendallite.site.layer import Layer
 from kendallite.core import transformer
-from flask import render_template, request, g, abort, url_for
+from flask import render_template, request, g, abort, url_for, Response
 import requests
 from lxml import etree
 
@@ -48,6 +48,16 @@ def layer(layer_id):
         return render_template('tiled.html', layer=layer, **context)
     else:
         return render_template('bbox.html', layer=layer, **context)
+
+@app.route('/layer/<layer_id>/metadata/')
+def metadata(layer_id):
+    layer = Layer.get(layer_id)
+    tree = etree.fromstring(layer.fgdc.strip().encode("utf-8"))
+    res = etree.tostring(tree, encoding="UTF-8", pretty_print=True)
+    return Response(res,
+                    headers={
+                        'Content-Type': 'application/xml; charset=UTF-8',
+                        'Content-Disposition': 'attachment; filename=fgdc.xml'})
 
 def transform(xml, transform):
     root = etree.XML(xml.strip().encode('utf-8'))
