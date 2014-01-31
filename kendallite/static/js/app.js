@@ -32,8 +32,8 @@ var App = Backbone.View.extend({
         "submit #search-form": "setKeyword",
         "change input[name='limit']": "setGeofilter",
         "submit #geocode": "geocode",
-        "click .previous a": "previousPage",
-        "click .next a": "nextPage"
+        "click .page-left a": "previousPage",
+        "click .page-right a": "nextPage"
     },
 
     initialize: function() {
@@ -150,9 +150,14 @@ var App = Backbone.View.extend({
         var start;
 
         ev.preventDefault();
-        $(".results-mask").show();
 
         start = parseInt(query.get("qs")) || 0;
+
+        if (start + results_state.windowsize >= query.get("total")) {
+            return;
+        }
+
+        $(".results-mask").show();
         hash.update({qs: start + results_state.windowsize});
 
     },
@@ -165,9 +170,14 @@ var App = Backbone.View.extend({
         var start;
 
         ev.preventDefault();
-        $(".results-mask").show();
 
         start = parseInt(query.get("qs"));
+
+        if (start === 0) {
+            return;
+        }
+
+        $(".results-mask").show();
         start = start - results_state.windowsize;
         start = (start < 0) ? 0 : start;
         hash.update({qs: start});
@@ -272,17 +282,19 @@ return {
          */
         function resizeResults() {
 
-            var resultsHeight, innerHeight;
+            var resultsHeight, innerHeight,
+                bottomMargin = 50, //margin between bottom of page and results
+                rowHeight = 30; //height of result row
 
             resultsHeight =
                 $(window).height() -
                 $(".search-results").offset().top -
-                30
+                bottomMargin
             ;
 
-            innerHeight = resultsHeight - (resultsHeight % 30);
+            innerHeight = resultsHeight - (resultsHeight % rowHeight);
 
-            results_state.windowsize = innerHeight / 30;
+            results_state.windowsize = innerHeight / rowHeight;
 
             $(".search-results").css("max-height", innerHeight + "px");
 
@@ -291,15 +303,6 @@ return {
         resizeResults();
 
         $(window).on("resize", resizeResults);
-
-        $("#search").hover(
-            function() {
-                $(".search-nav").fadeTo(200, 0.95);
-            },
-            function() {
-                $(".search-nav").fadeTo(200, 0.0);
-            }
-        );
 
         $("#filters-button").on("click", function() {
 

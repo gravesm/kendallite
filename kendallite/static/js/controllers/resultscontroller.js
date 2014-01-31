@@ -16,17 +16,22 @@ define([
         },
 
         reload: function(collection, opts) {
+            var start = parseInt(query.get("qs")) || 0,
+                windowsize = parseInt(this.options.results.windowsize),
+                total = parseInt(query.get("total"));
 
-            if (query.get("qs") > 0) {
-                $(".previous").css("visibility", "visible");
+            $(".page-middle").text(total + " Results");
+
+            if (start > 0) {
+                $(".page-left a").removeClass("page-disabled");
             } else {
-                $(".previous").css("visibility", "hidden");
+                $(".page-left a").addClass("page-disabled");
             }
 
-            if (query.get("qs") + this.options.results.windowsize < query.get("total")) {
-                $(".next").css("visibility", "visible");
+            if (start + windowsize < total) {
+                $(".page-right a").removeClass("page-disabled");
             } else {
-                $(".next").css("visibility", "hidden");
+                $(".page-right a").addClass("page-disabled");
             }
 
             this.$el.empty();
