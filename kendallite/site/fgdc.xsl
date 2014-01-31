@@ -858,7 +858,7 @@
 
     <xsl:template match="pubinfo/publish">
         <xsl:call-template name="description">
-            <xsl:with-param name="term" select="'Publiser'" />
+            <xsl:with-param name="term" select="'Publisher'" />
         </xsl:call-template>
     </xsl:template>
 
