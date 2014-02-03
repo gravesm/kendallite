@@ -1,9 +1,24 @@
 <div class="text-result" title="<%= o.LayerDisplayName %>">
     <%  if (o.Access == 'Restricted' && !(user && o.Institution == 'MIT')) {
-            print('<span class="glyphicon glyphicon-lock" title="This is a restricted layer"></span>');
+            print('<span class="glyphicon glyphicon-lock result-icon" title="This is a restricted layer"></span>');
         } else {
             print('<span class="glyphicon"></span>');
-        } %>
+        }
+    %>
+    <%  if (o.DataType === 'Point') {
+            print('<span class="kendicon kendicon-point result-icon" title="Points"></span>');
+        } else if (o.DataType === 'Line') {
+            print('<span class="kendicon kendicon-line result-icon" title="Lines"></span>');
+        } else if (o.DataType === 'Polygon') {
+            print('<span class="kendicon kendicon-polygon result-icon" title="Polygons"></span>');
+        } else if (o.DataType === 'LibraryRecord') {
+            print('<span class="glyphicon glyphicon-book result-icon" title="Library Record"></span>');
+        } else if ((o.DataType === 'Raster') || (o.DataType === 'Paper Map')) {
+            print('<span class="glyphicon glyphicon-picture result-icon" title="Raster"></span>');
+        } else {
+            print('<span class="glyphicon"></span>');
+        }
+    %>
     <a href="#" class="zoom" title="Zoom to layer"><span class="glyphicon glyphicon-zoom-in"></span></a>
     <a href="<%= o.site_root %>/layer/<%= o.LayerId %>"><%= o.LayerDisplayName %></a>
 </div>

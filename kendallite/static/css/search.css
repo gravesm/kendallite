@@ -1,5 +1,41 @@
 @import url('base.css');
 
+@font-face {
+    font-family: 'kendallite';
+    src:url('fonts/kendallite.eot?-him64c');
+    src:url('fonts/kendallite.eot?#iefix-him64c') format('embedded-opentype'),
+        url('fonts/kendallite.woff?-him64c') format('woff'),
+        url('fonts/kendallite.ttf?-him64c') format('truetype'),
+        url('fonts/kendallite.svg?-him64c#kendallite') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.kendicon {
+    font-family: 'kendallite';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.kendicon-polygon:before {
+    content: "\e602";
+}
+.kendicon-point:before {
+    content: "\e603";
+}
+.kendicon-line:before {
+    content: "\e604";
+}
+
+.result-icon {
+    color: #7f7f7f;
+}
+
 .wrapper {
     height: 100%;
     padding-top: 50px;
@@ -67,7 +103,7 @@
 
 .search-results {
     border: thin solid #66afe9;
-    border-radius: 5px 5px 0 0;
+    border-radius: 2px 2px 0 0;
     overflow: hidden;
 }
 
@@ -83,7 +119,7 @@
     border-top: 0;
     text-align: center;
     font-size: 18px;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 2px 2px;
 }
 
 .paging a {
@@ -109,7 +145,7 @@
 }
 
 .page-left a {
-    border-radius: 0 0 0 5px;
+    border-radius: 0 0 0 1px;
 }
 
 .page-right {
@@ -117,7 +153,7 @@
 }
 
 .page-right a {
-    border-radius: 0 0 5px 0;
+    border-radius: 0 0 1px 0;
 }
 
 .page-middle {
@@ -144,8 +180,4 @@
     position: relative;
     margin-top: 20px;
     margin-right: 10px;
-}
-
-.glyphicon-lock {
-    color: #7f7f7f;
 }
