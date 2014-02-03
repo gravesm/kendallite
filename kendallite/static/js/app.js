@@ -39,7 +39,9 @@ var App = Backbone.View.extend({
 
     initialize: function() {
 
-        var map = Map.map();
+        var search, map = Map.map();
+
+        search = _.throttle(this._search, 100, {leading: false});
 
         this.results = new Backbone.Collection([], {
             model: Item
@@ -60,7 +62,7 @@ var App = Backbone.View.extend({
             $("input[name='restricted']").prop("checked", true);
         }
 
-        this.listenTo(query, "sync", this._search);
+        this.listenTo(query, "sync", search);
         this.listenTo(query, "change", this.updateFilterCount);
         query.fetch();
 
@@ -103,6 +105,15 @@ var App = Backbone.View.extend({
 
     },
 
+    /**
+     * Makes the Solr query and updates Backbone collections.
+     *
+     * This function should not be called directly, but should be throttled to
+     * prevent unnecessary calls to Solr while panning and zooming the map.
+     *
+     * @private
+     * @param  {Object} query Query model
+     */
     _search: function(query) {
         var q, results, facets, params;
 

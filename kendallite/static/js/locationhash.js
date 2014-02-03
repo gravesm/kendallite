@@ -1,21 +1,14 @@
 define(function() {
 
-    var set = _.throttle(function(obj) {
-        window.location.hash = $.param(obj, true).replace(/\+/g, '%20');
-    }, 100, {leading: false});
-
     var Hash = function() {
 
         /**
          * Sets the location hash to the value of obj.
          *
-         * This provides access to a throttled version of a function that sets
-         * the location hash, calling jQuery's $.param() internally.
-         *
          * @param {Object}  obj Parameters to set hash to.
          */
         this.set = function(obj) {
-            set(obj);
+            window.location.hash = $.param(obj, true).replace(/\+/g, '%20');
         };
 
         this.get = function(key) {
