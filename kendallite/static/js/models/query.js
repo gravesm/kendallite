@@ -12,6 +12,9 @@ var Query = Backbone.Model.extend({
         this.on("change:geofilter", function(m, v) {
             m.set('geofilter', this.toBool(v));
         });
+        this.on("change:restricted", function(m, v) {
+            m.set('restricted', this.toBool(v));
+        });
     },
 
     toInt: function(v) {
@@ -118,6 +121,7 @@ var Query = Backbone.Model.extend({
                         return "[" + v + " TO " + v + "+10YEAR-1SECOND]";
                     }
                 }),
+            rf = this.get('restricted') ? '!(Access:"Restricted" AND !(InstitutionSort:"MIT"))': null,
             gf = this.get('geofilter') ? '{!frange l=0 incl=false}$intx' : null;
 
 
@@ -126,6 +130,7 @@ var Query = Backbone.Model.extend({
             make_filter(is, '{!tag=inst}InstitutionSort:', ' OR '),
             make_filter(pl, '{!tag=pl}PlaceKeywordsSort:', ' AND '),
             make_filter(df, '{!tag=df}ContentDate:', ' OR '),
+            rf,
             gf
         ]);
 

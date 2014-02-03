@@ -31,6 +31,7 @@ var App = Backbone.View.extend({
     events: {
         "submit #search-form": "setKeyword",
         "change input[name='limit']": "setGeofilter",
+        "change input[name='restricted']": "setRestrictedFilter",
         "submit #geocode": "geocode",
         "click .page-left a": "previousPage",
         "click .page-right a": "nextPage"
@@ -53,6 +54,10 @@ var App = Backbone.View.extend({
         $("#search-form input[name='keyword']").val(hash.get('q'));
         if (hash.get('geofilter')) {
             $("input[name='limit']").prop("checked", true);
+        }
+
+        if (hash.get('restricted')) {
+            $("input[name='restricted']").prop("checked", true);
         }
 
         this.listenTo(query, "sync", this._search);
@@ -188,6 +193,13 @@ var App = Backbone.View.extend({
         hash.update({
             qs: 0,
             geofilter: $(ev.currentTarget).is(":checked")
+        });
+    },
+
+    setRestrictedFilter: function(ev) {
+        hash.update({
+            qs: 0,
+            restricted: $(ev.currentTarget).is(":checked")
         });
     },
 
