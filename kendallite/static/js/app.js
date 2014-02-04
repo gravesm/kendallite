@@ -300,6 +300,9 @@ var App = Backbone.View.extend({
 
 return {
     run: function() {
+
+        var href;
+
         /**
          * Resizes the search results div to fit in the window.
          */
@@ -341,6 +344,10 @@ return {
         });
 
         if (typeof user === "undefined") {
+            href = $(".login-shib").attr("href");
+            $(".login-shib").attr(
+                "href", href + encodeURIComponent(window.location.href)
+            );
             $("#login-dialog").modal();
         }
 

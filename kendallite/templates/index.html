@@ -242,7 +242,7 @@
                         In order to view some of the data in GeoWeb you will need to authenticate through Touchstone. Log in, or continue anonymously.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default">Log In</button>
+                        <a href="{{ config.SHIB_LOGIN_URL }}?target=" class="btn btn-default login-shib">Log In</a>
                         <button type="button" class="btn btn-default login-close" data-dismiss="modal">Continue</button>
                     </div>
                 </div>
