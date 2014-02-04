@@ -40,6 +40,7 @@ return Backbone.View.extend({
         if ($(ev.currentTarget).is(":checked")) {
             params[name] = value;
             hash.update(params, true);
+            hash.update({qs: 0});
         } else {
             hash.remove(name, value);
         }
