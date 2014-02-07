@@ -334,6 +334,7 @@ return {
 
             $(this).parent().toggleClass("open");
             $("#filters").toggle(0, resizeResults);
+            query.trigger("sync", query);
 
             return false;
 
