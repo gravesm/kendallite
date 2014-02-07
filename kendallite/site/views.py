@@ -59,6 +59,33 @@ def metadata(layer_id):
                         'Content-Type': 'application/xml; charset=UTF-8',
                         'Content-Disposition': 'attachment; filename=fgdc.xml'})
 
+@app.route('/download/email/')
+def email_download():
+    """Proxy request to download layer through email.
+
+    This is currently only used for downloading raster layers from Harvard.
+
+    """
+    layer = Layer.get(request.args.get('OGPID'))
+    email = request.args.get('email')
+    bbox = request.args.get('bbox') or (
+        "{0},{1},{2},{3}".format(layer.minx, layer.miny, layer.maxx, layer.maxy))
+    xmin, ymin, xmax, ymax = bbox.split(",")
+    params = {
+        'LayerName': layer._name,
+        'UserEmail': email,
+        'XMin': xmin,
+        'YMin': ymin,
+        'XMax': xmax,
+        'YMax': ymax,
+        'Clip': 'true',
+        'AppID': 55,
+        'EncryptionKey': 'OPENGEOPORTALROCKS',
+    }
+
+    res = requests.get(layer.location.get("download"), params=params)
+    return (res.text, res.status_code,)
+
 def transform(xml, transform):
     root = etree.XML(xml.strip().encode('utf-8'))
     return transform(root)

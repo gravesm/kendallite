@@ -25,6 +25,21 @@
 
             $("[data-toggle=popover]").popover();
 
+            $("#email-prompt").on("submit", "form", function(e) {
+                e.preventDefault();
+                $.get("{{ url_for('email_download') }}", {
+                        OGPID: "{{ layer.id }}",
+                        email: $(this).find("[name=email]").val()
+                    })
+                    .done(function() {
+                        $("#email-prompt .alert-success").removeClass("hidden");
+                    })
+                    .fail(function() {
+                        $("#email-prompt .alert-danger").removeClass("hidden");
+                    })
+                ;
+            });
+
         });
     </script>
 {% endblock %}
@@ -53,8 +68,16 @@
                 Download as <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
-                <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
+                {% if layer.is_raster %}
+                    {% if layer.institution.lower() == 'harvard' %}
+                        <li><a href="#email-prompt" data-toggle="modal">High resolution image</a></li>
+                    {% else %}
+                        <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
+                    <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
+                {% endif %}
             </ul>
         </div>
     {% endif %}

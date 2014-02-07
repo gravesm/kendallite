@@ -126,5 +126,33 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="email-prompt">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Request High Resolution Image</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please enter your email address. You will receive a
+                            link to download the image.
+                            <form>
+                                <div class="form-group col-sm-6">
+                                    <input type="text" class="form-control" placeholder="Enter email" name="email" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Request</button>
+                                </div>
+                                <div class="hidden alert alert-success">Request sent! You should receive an email shortly.</div>
+                                <div class="hidden alert alert-danger">There was a problem with your request.</div>
+                            </form>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
