@@ -12,8 +12,7 @@ var ItemView = Backbone.View.extend({
 
     events: {
         mouseenter: "mouseenter",
-        mouseleave: "mouseleave",
-        "click .zoom": "zoom"
+        mouseleave: "mouseleave"
     },
 
     initialize: function(options) {
@@ -50,14 +49,6 @@ var ItemView = Backbone.View.extend({
     mouseleave: function(ev) {
 
         Map.removePreviewBoxes();
-
-    },
-
-    zoom: function(ev) {
-
-        ev.preventDefault();
-
-        Map.zoomToLayer(this.model);
 
     }
 

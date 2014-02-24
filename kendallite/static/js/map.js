@@ -103,21 +103,6 @@ var Map = function() {
         return map;
     };
 
-    this.zoomToLayer = function(layer) {
-        var l,b,r,t, bounds;
-
-        l = layer.get("MinX");
-        b = layer.get("MinY");
-        r = layer.get("MaxX");
-        t = layer.get("MaxY");
-
-        bounds = new OpenLayers.Bounds([l,b,r,t]);
-        bounds.transform("EPSG:4326", "EPSG:900913");
-
-        map.zoomToExtent(bounds);
-
-    };
-
 };
 
 return new Map();
