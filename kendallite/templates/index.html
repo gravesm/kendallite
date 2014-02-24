@@ -68,8 +68,10 @@
             <!-- Navigation bar -->
             <nav class="navbar navbar-fixed-top">
                 <div class="navbar-header">
-                    <span class="blue glyphicon glyphicon-globe"></span>
-                    MIT <span class="blue">Geo</span>Web
+                    <a href="{{ url_for('index') }}" title="MIT GeoWeb">
+                        <span class="blue glyphicon glyphicon-globe"></span>
+                        MIT <span class="blue">Geo</span>Web
+                    </a>
                 </div>
                 <form class="navbar-form navbar-left" id="geocode" method="get">
                     <div class="form-group">
