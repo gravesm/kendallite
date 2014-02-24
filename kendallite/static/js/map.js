@@ -49,7 +49,9 @@ var Map = function() {
             center.transform("EPSG:4326", "EPSG:900913");
             map.setCenter(center, opts.z);
         } else {
-            map.zoomToMaxExtent();
+            center = new OpenLayers.LonLat(-105, 40)
+                .transform("EPSG:4326", "EPSG:900913");
+            map.setCenter(center, 3);
         }
 
         /**
