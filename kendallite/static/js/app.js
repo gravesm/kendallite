@@ -122,7 +122,7 @@ var App = Backbone.View.extend({
         results = this.results;
         facets = this.facets;
 
-        q = query.qstring();
+        q = query.params();
         q.start = parseInt(query.get('qs')) || 0;
         q.rows = results_state.windowsize || 15;
 

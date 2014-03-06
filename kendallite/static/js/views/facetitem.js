@@ -1,5 +1,5 @@
 define([
-    'text!tmpl/facetitem.html',
+    'vendor/text!tmpl/facetitem.html',
     'locationhash'
 ], function(Tmpl, hash) {
 

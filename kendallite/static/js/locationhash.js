@@ -57,7 +57,7 @@ define(function() {
 
             var hash, params = {};
 
-            hash = location.hash.slice(1);
+            hash = this._hash();
 
             if (hash) {
                 _.each(hash.split('&'), function(part) {
@@ -74,6 +74,10 @@ define(function() {
             }
 
             return params;
+        };
+
+        this._hash = function() {
+            return location.hash.slice(1);
         };
 
     };

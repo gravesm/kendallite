@@ -5,19 +5,198 @@ define(['locationhash'], function(Hash) {
  */
 var Query = Backbone.Model.extend({
 
+    defaults: {
+        boosts: {
+            area: 0,
+            center: 5.0,
+            intx: 1.0,
+            name: 1.0,
+            publisher: 1.0,
+            originator: 1.0,
+            place_keywords: 2.5
+        }
+    },
+
     initialize: function() {
         this.on("change:qs", function(m, v) {
-            m.set('qs', this.toInt(v));
+            m.set('qs', this._toInt(v));
         });
         this.on("change:geofilter", function(m, v) {
-            m.set('geofilter', this.toBool(v));
+            m.set('geofilter', this._toBool(v));
         });
         this.on("change:restricted", function(m, v) {
-            m.set('restricted', this.toBool(v));
+            m.set('restricted', this._toBool(v));
         });
     },
 
-    toInt: function(v) {
+    params: function() {
+
+        var bounds, boosts, q, filters = [];
+
+            bounds = this._toBounds(this.get('b'));
+            boosts = this.get('boosts');
+            q = _.first(this.get('q')) || "*";
+
+            filters.push(this.dataTypeFilter());
+            filters.push(this.institutionFilter());
+            filters.push(this.placeKeywordFilter());
+            filters.push(this.dateFilter());
+            filters.push(this.restrictedFilter(this.get("restricted")));
+            filters.push(this.spatialFilter(this.get("geofilter")));
+
+        return {
+            qf: this.queryFields(boosts),
+            q: q,
+            bf: this.boostFunctions(boosts, bounds),
+            fq: _.compact(filters),
+            intx: this.intersection(bounds),
+            union: this.union(bounds)
+        };
+
+    },
+
+    boostFunctions: function(boosts, bounds) {
+
+        var bf = [];
+
+        !boosts.area || bf.push(this.areaRelevancy(bounds) + "^" + boosts.area);
+        !boosts.center || bf.push(this.centerRelevancy(bounds) + "^" + boosts.center);
+        !boosts.intx || bf.push("div($intx,$union)^" + boosts.intx);
+
+        return bf;
+
+    },
+
+    queryFields: function(boosts) {
+
+        var qf = [];
+
+        !boosts.name || qf.push("LayerDisplayName^" + boosts.name);
+        !boosts.place_keywords || qf.push("PlaceKeywords^" + boosts.place_keywords);
+        !boosts.publisher || qf.push("Publisher^" + boosts.publisher);
+        !boosts.originator || qf.push("Originator^" + boosts.originator);
+
+        return qf.join(" ");
+
+    },
+
+    spatialFilter: function(geofilt) {
+        return geofilt ? '{!frange l=0 incl=false}$intx' : undefined;
+    },
+
+    restrictedFilter: function(restricted) {
+        return restricted ? '!(Access:"Restricted" AND !(InstitutionSort:"MIT"))': undefined;
+    },
+
+    dataTypeFilter: function(datatypes) {
+
+        var dt;
+
+        if (typeof datatypes === "undefined") {
+            return;
+        }
+
+        dt = _.map(_.flatten([datatypes]), function(v) { return '"' + v + '"'; });
+
+        return '{!tag=dt}DataTypeSort:(' + dt.join(" OR ") + ')';
+
+    },
+
+    institutionFilter: function(institutions) {
+
+        var inst;
+
+        if (typeof institutions === "undefined") {
+            return;
+        }
+
+        inst = _.map(_.flatten([institutions]), function(v) { return '"' + v + '"'; });
+
+        return '{!tag=inst}InstitutionSort:(' + inst.join(" OR ") + ')';
+
+    },
+
+    placeKeywordFilter: function(keywords) {
+
+        var pl;
+
+        if (typeof keywords === "undefined") {
+            return;
+        }
+
+        pl = _.map(_.flatten([keywords]), function(v) { return '"' + v + '"'; });
+
+        return '{!tag=pl}PlaceKeywordsSort:(' + pl.join(" AND ") + ')';
+
+    },
+
+    dateFilter: function(dates) {
+
+        var df;
+
+        if (typeof dates === "undefined") {
+            return;
+        }
+
+        df = _.map(_.flatten([dates]), function(v) {
+            if (v === "before") {
+                return "[* TO 1900-01-01T01:01:01Z-1SECOND]";
+            } else {
+                return "[" + v + " TO " + v + "+10YEAR-1SECOND]";
+            }
+        });
+
+        return '{!tag=df}ContentDate:(' + df.join(" OR ") + ')';
+
+    },
+
+    intersection: function(b) {
+
+        var intersection;
+
+        intersection = "product(max(0,sub(min("+b.right+",MaxX),max("+b.left+",MinX))),";
+        intersection += "max(0,sub(min("+b.top+",MaxY),max("+b.bottom+",MinY))))";
+
+        return intersection;
+
+    },
+
+    union: function(b) {
+
+        var bounds = b.toGeometry().getArea();
+
+        return "sub(sum(" + bounds + ",Area),$intx)";
+
+    },
+
+    centerRelevancy: function(b) {
+
+        var score,
+            center = b.getCenterLonLat();
+
+        score = "if(and(exists(CenterX),exists(CenterY)),";
+        score += "recip(sqedist(CenterX,CenterY,"+center.lon+","+center.lat+"),1,1000,1000),0)";
+
+        return score;
+
+    },
+
+    areaRelevancy: function(b) {
+
+        var map = b.toGeometry().getArea();
+
+        return "if(exists(Area),recip(abs(sub(Area," + map + ")),1,100,100),0)";
+
+    },
+
+    sync: function() {
+        var attributes = _.extend({}, this.defaults, Hash.params());
+        this.clear({silent: true});
+        this.set(attributes);
+        this.trigger('sync', this);
+    },
+
+    _toInt: function(v) {
         if (_.isArray(v)) {
             return parseInt(v[0]);
         } else {
@@ -25,7 +204,7 @@ var Query = Backbone.Model.extend({
         }
     },
 
-    toBool: function(v) {
+    _toBool: function(v) {
         if (!_.isBoolean(v)) {
             if (_.isArray(v)) {
                 return v[0] === 'true';
@@ -37,142 +216,12 @@ var Query = Backbone.Model.extend({
         }
     },
 
-    defaults: {
-        boosts: {
-            area: 1.0,
-            center: 1.0,
-            intx: 1.0,
-            name: 1.0,
-            publisher: 1.0,
-            originator: 1.0,
-            place_keywords: 2.5
-        }
-    },
-
-    toBounds: function(bounds) {
+    _toBounds: function(bounds) {
         if (bounds) {
             return new OpenLayers.Bounds(bounds[0].split(","));
         } else {
             return new OpenLayers.Bounds(-180, -90, 180, 90);
         }
-    },
-
-    qstring: function() {
-
-        var bf_array, qf_array, boosts;
-
-        boosts = this.get('boosts');
-
-        bf_array = [
-            this.areaRelevancy() + "^" + boosts.area,
-            this.centerRelevancy() + "^" + boosts.center,
-            "div($intx,$union)^" + boosts.intx
-        ];
-
-        qf_array = [
-            "LayerDisplayName^" + boosts.name,
-            "Publisher^" + boosts.publisher,
-            "Originator^" + boosts.originator,
-            "PlaceKeywords^" + boosts.place_keywords
-        ];
-
-        return {
-            qf: qf_array.join(" "),
-            q: _.first(this.get('q')) || "*",
-            bf: bf_array,
-            fq: this.getFilters(),
-            intx: this.intersection(),
-            union: this.toBounds(this.get('b')).toGeometry().getArea()
-        };
-
-    },
-
-    /**
-     * Return filter queries as array
-     *
-     * @private
-     * @return {Array} Filter queries
-     */
-    getFilters: function() {
-
-        function wrap_terms(terms, wrapper) {
-            if (terms) {
-                return _.map(_.flatten([terms]), wrapper);
-            }
-        }
-
-        function quote(v) {
-            return '"' + v + '"';
-        }
-
-        function make_filter(terms, filter, conj) {
-            if (terms) {
-                return filter + "(" + terms.join(conj) + ")";
-            }
-        }
-
-        var dt = wrap_terms(this.get('dt'), quote),
-            is = wrap_terms(this.get('in'), quote),
-            pl = wrap_terms(this.get('PlaceKeywordsSort'), quote),
-            df = wrap_terms(this.get('ContentDate'), function range(v) {
-                    if (v === "before") {
-                        return "[* TO 1900-01-01T01:01:01Z-1SECOND]";
-                    } else {
-                        return "[" + v + " TO " + v + "+10YEAR-1SECOND]";
-                    }
-                }),
-            rf = this.get('restricted') ? '!(Access:"Restricted" AND !(InstitutionSort:"MIT"))': null,
-            gf = this.get('geofilter') ? '{!frange l=0 incl=false}$intx' : null;
-
-
-        return _.compact([
-            make_filter(dt, '{!tag=dt}DataTypeSort:', ' OR '),
-            make_filter(is, '{!tag=inst}InstitutionSort:', ' OR '),
-            make_filter(pl, '{!tag=pl}PlaceKeywordsSort:', ' AND '),
-            make_filter(df, '{!tag=df}ContentDate:', ' OR '),
-            rf,
-            gf
-        ]);
-
-    },
-
-    intersection: function() {
-
-        var intersection,
-            b = this.toBounds(this.get('b'));
-
-        intersection = "product(max(0,sub(min("+b.right+",MaxX),max("+b.left+",MinX))),";
-        intersection += "max(0,sub(min("+b.top+",MaxY),max("+b.bottom+",MinY))))";
-
-        return intersection;
-
-    },
-
-    centerRelevancy: function() {
-
-        var score,
-            center = this.toBounds(this.get('b')).getCenterLonLat();
-
-        score = "if(and(exists(CenterX),exists(CenterY)),";
-        score += "recip(sqedist(CenterX,CenterY,"+center.lon+","+center.lat+"),1,1000,1000),0)";
-
-        return score;
-
-    },
-
-    areaRelevancy: function() {
-
-        var map = this.toBounds(this.get('b')).toGeometry().getArea();
-
-        return "if(exists(Area),recip(abs(sub(Area," + map + ")),1,1000,1000),0)";
-
-    },
-
-    sync: function() {
-        var attributes = _.extend({}, this.defaults, Hash.params());
-        this.clear({silent: true});
-        this.set(attributes);
-        this.trigger('sync', this);
     }
 
 });

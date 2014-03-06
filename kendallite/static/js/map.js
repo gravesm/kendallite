@@ -1,5 +1,5 @@
 define([
-    'text!tmpl/layer_switcher.html',
+    'vendor/text!tmpl/layer_switcher.html',
 ], function(Tmpl) {
 
 var Map = function() {

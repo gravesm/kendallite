@@ -15,10 +15,11 @@ module.exports = function(grunt) {
         jasmine: {
             requirejs: {
                 options: {
-                    specs: "spec/*.spec.js",
+                    specs: "spec/**/*.spec.js",
                     vendor: [
-                        'kendallite/static/js/libs/jquery-1.9.1.min.js',
-                        'kendallite/static/js/libs/underscore-min.js'
+                        'kendallite/static/libs/underscore.js',
+                        'kendallite/static/libs/backbone.js',
+                        'kendallite/static/openlayers/OpenLayers.js'
                     ],
                     host: "http://127.0.0.1:8000/",
                     template: require("grunt-template-jasmine-requirejs"),

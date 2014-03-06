@@ -1,5 +1,5 @@
 define([
-    'text!tmpl/item.html',
+    'vendor/text!tmpl/item.html',
     'map',
     'module',
 ], function(Tmpl, Map, module) {
