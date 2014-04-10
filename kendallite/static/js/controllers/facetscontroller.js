@@ -1,57 +1,33 @@
-define([
-    'views/facetitem',
-    'locationhash'
-], function(FacetView, hash) {
+define(['views/facetitem', 'locationhash'], function(FacetView, hash) {
 
-    return Backbone.View.extend({
+return Backbone.View.extend({
 
-        initialize: function(opts) {
-            this.model.items.on("reset", this.refresh, this);
-            this.$dialog = opts.dialog.find('.modal-body');
-        },
+    initialize: function(opts) {
+        this.collection.on("reset", this.refresh, this);
+        this.f_id = opts.facet_id;
+    },
 
-        refresh: function(collection, opts) {
+    refresh: function(collection, opts) {
+        this.$el.empty();
+        collection.each(this.renderView, this);
+    },
 
-            var name = this.model.get("name");
+    renderView: function(item) {
+        var view;
 
-            collection.each(function(item) {
-                if (_.contains(_.flatten([hash.get(name)]), item.get("value"))) {
-                    item.set("selected", true);
-                }
-            });
+        item.set("f_id", this.f_id);
 
-            collection.sort();
-
-            this.$el.empty();
-            this.$dialog.empty();
-
-            _.each(collection.slice(0,4), this.renderView, this);
-
-            collection.each(this.renderDialog, this);
-
-        },
-
-        renderView: function(facet) {
-
-            var view = new FacetView({
-                model: facet,
-                facet: this.model.get("name")
-            });
-
-            this.$el.append(view.render().el);
-
-        },
-
-        renderDialog: function(facet) {
-
-            var view = new FacetView({
-                model: facet,
-                facet: this.model.get("name")
-            });
-
-            this.$dialog.append(view.render().el);
+        if (_.contains(_.flatten([hash.get(this.f_id)]), item.get("value"))) {
+            item.set("selected", true);
         }
 
-    });
+        view = new FacetView({
+            model: item
+        });
+
+        this.$el.append(view.render().el);
+    }
+
+});
 
 });

@@ -3,7 +3,7 @@ define(['locationhash'], function(Hash) {
 /**
  * The Query model stores the current state of the Solr query.
  */
-var Query = Backbone.Model.extend({
+return Backbone.Model.extend({
 
     defaults: {
         boosts: {
@@ -18,6 +18,9 @@ var Query = Backbone.Model.extend({
     },
 
     initialize: function() {
+        this.on("change:page", function(m, v) {
+            m.set('page', this._toInt(v));
+        });
         this.on("change:qs", function(m, v) {
             m.set('qs', this._toInt(v));
         });
@@ -37,8 +40,8 @@ var Query = Backbone.Model.extend({
             boosts = this.get('boosts');
             q = _.first(this.get('q')) || "*";
 
-            filters.push(this.dataTypeFilter());
-            filters.push(this.institutionFilter());
+            filters.push(this.dataTypeFilter(this.get('dt')));
+            filters.push(this.institutionFilter(this.get('in')));
             filters.push(this.placeKeywordFilter());
             filters.push(this.dateFilter());
             filters.push(this.restrictedFilter(this.get("restricted")));
@@ -225,7 +228,5 @@ var Query = Backbone.Model.extend({
     }
 
 });
-
-return new Query();
 
 });

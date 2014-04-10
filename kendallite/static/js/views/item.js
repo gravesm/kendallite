@@ -6,9 +6,7 @@ define([
 
 var ItemView = Backbone.View.extend({
 
-    tagName: "div",
-
-    className: "search-result",
+    tagName: "li",
 
     events: {
         mouseenter: "mouseenter",

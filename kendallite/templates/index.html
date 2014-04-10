@@ -6,7 +6,7 @@
 
         <title>MIT GeoWeb</title>
 
-        <link href="{{ config.STATIC_URL }}bootstrap/css/bootstrap.css"
+        <link href="{{ config.STATIC_URL }}bootstrap/css/bootstrap.min.css"
             rel="stylesheet" type="text/css" />
         <link href="{{ config.STATIC_URL }}css/search.css"
             rel="stylesheet" type="text/css" />
@@ -47,7 +47,7 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ config.STATIC_URL }}libs/underscore.js"></script>
         <script src="{{ config.STATIC_URL }}libs/backbone.js"></script>
-        <script src="{{ config.STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+        <script src="{{ config.STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
         <script src="{{ config.STATIC_URL }}libs/jquery.cookie.js"></script>
 
         <script>
@@ -63,176 +63,126 @@
         <script data-main="{{ config.STATIC_URL }}js/main" src="{{ config.STATIC_URL }}libs/require.js"></script>
     </head>
     <body>
-        <div class="wrapper">
 
-            <!-- Navigation bar -->
-            <nav class="navbar navbar-fixed-top">
-                <div class="navbar-header">
-                    <a href="{{ url_for('index') }}" title="MIT GeoWeb">
-                        <span class="blue glyphicon glyphicon-globe"></span>
-                        MIT <span class="blue">Geo</span>Web
-                    </a>
-                </div>
-                <form class="navbar-form navbar-left" id="geocode" method="get">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-sm"
-                            placeholder="Location" name="location" />
-                    </div>
-                    <button type="submit" class="btn btn-default btn-sm">Zoom To</button>
-                </form>
-                <ul class="nav navbar-nav navbar-left">
-                    <li class="dropdown">
-                        <a href="#" id="filters-button">
-                            <span class="label label-danger" id="active-filters" title="Active filters"></span>
-                            Filters <b class="caret"></b>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-question-sign"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
-                                    How to use GeoWeb
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                    Email GIS Services
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-
-            <!-- Filters drop down -->
-            <div id="filters">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h4>Institutions</h4>
-                            <div id="facet-institution"></div>
-                            <a data-toggle="modal" href="#facet-institution-dialog">More</a>
-                        </div>
-                        <div class="col-sm-3">
-                            <h4>Data Type</h4>
-                            <div id="facet-datatype"></div>
-                            <a data-toggle="modal" href="#facet-datatype-dialog">More</a>
-                        </div>
-                    </div>
-                </div>
+        <nav class="navbar navbar-static-top">
+            <div class="navbar-header">
+                <a href="{{ url_for('index') }}" title="MIT GeoWeb">
+                    <span class="blue glyphicon glyphicon-globe"></span>
+                    MIT <span class="blue">Geo</span>Web
+                </a>
             </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="help-icon glyphicon glyphicon-question-sign"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                                How to use GeoWeb
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                                Email GIS Services
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
 
-            <div id="map"></div>
-
-            <!-- Search box and results -->
-            <div id="search">
-                <div>
+        <div class="container-fluid">
+            <div class="row searchbox">
+                <div class="col-md-6 col-md-offset-1">
                     <form id="search-form">
                         <div class="input-group">
-                            <input type="text" name="keyword" class="form-control" placeholder="Search" />
+                            <input type="text" class="form-control" placeholder="Search" name="keyword">
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button class="btn btn-primary" type="button">Search</button>
                             </span>
-                        </div>
-                        <div class="checkbox">
-                            <div>
-                                <label>
-                                    <input type="checkbox" name="limit" />
-                                    Limit results to visible map
-                                </label>
-                            </div>
-                            <div>
-                                <label>
-                                    <input type="checkbox" name="restricted" />
-                                    Hide restricted layers from other institutions
-                                </label>
-                            </div>
                         </div>
                     </form>
                 </div>
-                <div class="results-container">
-                    <div class="results-mask"></div>
-                    <div class="search-results">
-                        <div id="results">
-                        </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2" id="filters">
+                    <h3>Filters</h3>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="limit">
+                            Limit results to visible map
+                        </label>
                     </div>
-                    <div class="clearfix paging">
-                        <div class="page-left"><a href="#">&laquo;</a></div>
-                        <div class="page-right"><a href="#">&raquo;</a></div>
-                        <div class="page-middle">Middle</div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="restricted">
+                            Hide restricted layers from other institutions
+                        </label>
                     </div>
-                </div>
-            </div>
-
-            <!-- Map controls -->
-            <div class="control-element">
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-primary btn-xs" id="zoom-in">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                    <button type="button" class="btn btn-primary btn-xs" id="zoom-out">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </div>
-            </div>
-            <div class="control-element">
-                <button type="button" data-toggle="dropdown"
-                    class="dropdown-toggle btn btn-primary btn-xs">
-                    Base Layers <b class="caret"></b>
-                </button>
-                <ul class="dropdown-menu pull-right map-layers">
-                    <!-- Layer list generated dynamically by map.js -->
-                </ul>
-            </div>
-            <div class="control-element">
-                <button type="button" class="btn btn-primary btn-xs" id="zoom-max"
-                    title="Zoom to max extent">
-                    <span class="glyphicon glyphicon-globe"></span>
-                </button>
-            </div>
-
-        </div> <!-- end wrapper -->
-
-        <!-- Modal dialogs -->
-        <div id="facet-dialogs">
-            <div class="modal fade" id="facet-institution-dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Institutions</h4>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Institution</h3>
                         </div>
-                        <div class="modal-body">
+                        <ul id="institutions" class="facet">
+                        </ul>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Data Type</h3>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                        <ul id="datatypes" class="facet">
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="modal fade" id="facet-datatype-dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Data Types</h4>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <ol id="results" class="list-unstyled">
+                            </ol>
+                            <div id="pagination"></div>
                         </div>
-                        <div class="modal-body">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="col-md-7">
+                            <div class="row map-nav">
+                                <div class="col-md-6">
+                                    <button type="button" id="zoom-max"
+                                        class="btn btn-default btn-sm"
+                                        title="Zoom to max extent">
+                                        <span class="glyphicon glyphicon-globe"></span>
+                                    </button>
+                                    <div class="btn-group">
+                                        <button type="button" data-toggle="dropdown"
+                                            class="dropdown-toggle btn btn-default btn-sm">
+                                            Base Layers <b class="caret"></b>
+                                        </button>
+                                        <ul class="dropdown-menu map-layers">
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <form id="geocode">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control"
+                                                placeholder="Location" name="location">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="submit">
+                                                    Zoom To
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="map"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal dialogs -->
         <div class="modal fade" id="login-dialog">
             <div class="modal-dialog">
                 <div class="modal-content">

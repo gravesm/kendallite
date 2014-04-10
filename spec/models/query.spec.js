@@ -1,9 +1,10 @@
-define(['models/query'], function(query) {
+define(['models/query'], function(Query) {
 
     return describe("Query", function() {
+        var query;
 
         beforeEach(function() {
-            query.clear({silent: true});
+            query = new Query();
         });
 
         describe("initialize", function() {

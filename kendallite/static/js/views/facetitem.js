@@ -5,44 +5,38 @@ define([
 
 return Backbone.View.extend({
 
-    tagName: "div",
-
-    className: "checkbox",
+    tagName: "li",
 
     events: {
-        "change input": "select"
+        "click": "select"
     },
 
     initialize: function(opts) {
-        this.options = opts;
         this.template = _.template(Tmpl);
     },
 
     render: function() {
-
         var data = this.model.toJSON();
 
-        data.facet = this.options.facet;
-
         this.$el.html( this.template(data) );
-
         return this;
     },
 
     select: function(ev) {
-
         var value, name,
             params = {};
 
-        value = this.model.get('value');
-        name = this.options.facet;
+        ev.preventDefault();
 
-        if ($(ev.currentTarget).is(":checked")) {
+        value = this.model.get('value');
+        name = this.model.get('f_id');
+
+        if (this.model.get('selected') === true) {
+            hash.remove(name, value);
+        } else {
             params[name] = value;
             hash.update(params, true);
             hash.update({qs: 0});
-        } else {
-            hash.remove(name, value);
         }
 
     }

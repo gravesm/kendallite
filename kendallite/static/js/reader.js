@@ -17,6 +17,10 @@ define(function() {
 
         },
 
+        newRead: function(data) {
+            return this.prepareFieldCounts(data);
+        },
+
         normalizeFacets: function(data) {
 
             var collection = [];
