@@ -8,12 +8,18 @@
     <% } %>
     <% _.each(o.pages, function(v) { %>
             <li <% if (o.current == v) { print('class="active"') } %>>
-                <a href="#" data-page="<%= v %>"><%= v %></a>
+                <a href="#" data-page="<%= v %>">
+                    <%= _.formatnumber(v) %>
+                </a>
             </li>
     <% }) %>
     <% if (typeof o.last !== "undefined") { %>
         <li class="inactive"><span class="ellided">...</span></li>
-        <li><a href="#" data-page="<%= o.last %>"><%= o.last %></a></li>
+        <li>
+            <a href="#" data-page="<%= o.last %>">
+                <%= _.formatnumber(o.last) %>
+            </a>
+        </li>
     <% } %>
     <%  if (typeof o.next !== "undefined") { %>
             <li><a href="#" data-page="<%= o.next %>">&raquo;</a></li>

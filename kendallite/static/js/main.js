@@ -4,6 +4,14 @@ require([
     'locationhash'
 ], function(App, Map, hash) {
 
+var re = /\B(?=(\d{3})+$)/g;
+
+_.mixin({
+    formatnumber: function(num) {
+        return num.toString().replace(re, ",");
+    }
+});
+
 /**
  * Entry point for the application.
  */
