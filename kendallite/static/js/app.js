@@ -241,11 +241,19 @@ return {
             $.cookie('kendallite_user', '');
         });
 
-        if (typeof user === "undefined") {
+        /**
+         * The global `user` variable will be undefined the first time a user
+         * visits the site unless they have a valid Shib session. A defined but
+         * empty `user` variable indicates an anonymous user.
+         */
+        if (typeof user === "undefined" || user === "") {
             href = $(".login-shib").attr("href");
             $(".login-shib").attr(
                 "href", href + encodeURIComponent(window.location.href)
             );
+        }
+
+        if (typeof user === "undefined") {
             $("#login-dialog").modal();
         }
 
