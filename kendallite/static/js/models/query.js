@@ -10,10 +10,10 @@ return Backbone.Model.extend({
             area: 0,
             center: 5.0,
             intx: 1.0,
-            name: 1.0,
-            publisher: 1.0,
-            originator: 1.0,
-            place_keywords: 2.5
+            name: 1.5,
+            publisher: 0,
+            originator: 0,
+            place_keywords: 0.7
         }
     },
 
