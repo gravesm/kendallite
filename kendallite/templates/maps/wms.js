@@ -1,4 +1,4 @@
-var wms_layer = new OpenLayers.Layer.WMS('{{ layer.name }}',
+var wms_layer = new OpenLayers.Layer.WMS({{ layer.name|tojson }},
     {{ layer.wms_urls }}, {
         layers: '{{ layer.harvard_layer_name or layer.layer_name }}',
         format: "image/png",
