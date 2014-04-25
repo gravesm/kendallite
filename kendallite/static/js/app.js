@@ -57,11 +57,11 @@ var App = Backbone.View.extend({
         Map.map().events.register("moveend", this, this.setBounds);
 
         $("#search-form input[name='keyword']").val(hash.get('q'));
-        if (hash.get('geofilter')) {
+        if (hash.get('geofilter') === "true") {
             $("input[name='limit']").prop("checked", true);
         }
 
-        if (hash.get('restricted')) {
+        if (hash.get('restricted') === "true") {
             $("input[name='restricted']").prop("checked", true);
         }
 
