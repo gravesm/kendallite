@@ -18,6 +18,10 @@ return Backbone.View.extend({
     render: function() {
         var data = this.model.toJSON();
 
+        if (data.display === "Paper Map") {
+            data.display = "Scanned Map";
+        }
+
         this.$el.html( this.template(data) );
         return this;
     },

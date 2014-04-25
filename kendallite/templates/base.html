@@ -60,7 +60,11 @@
                         <dt>Data Type</dt>
                         <dd>
                             <a href="{{ url_for('index') }}#dt={{ layer.datatype }}">
-                                {{ layer.datatype }}
+                                {% if layer.datatype == "Paper Map" %}
+                                    Scanned Map
+                                {% else %}
+                                    {{ layer.datatype }}
+                                {% endif %}
                             </a>
                         </dd>
                         {% if layer.keywords_theme %}
