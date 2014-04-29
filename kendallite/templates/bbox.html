@@ -5,12 +5,20 @@
         $(function() {
             {% include 'maps/base.js' %}
             {% include 'maps/preview.js' %}
+            $(".downloads").on("click", "a", function() {
+                var bounds = map.getExtent().transform("EPSG:900913", "EPSG:4326");
+                $.get('{{ config.STATS_URL }}', {
+                    action: "Download",
+                    note: "{{ layer.id }}",
+                    extent: bounds.toString()
+                });
+            });
         });
     </script>
 {% endblock %}
 
 {% block download_controls %}
-    <div class="pull-right">
+    <div class="pull-right downloads">
         <a href="{{ layer.location.get('libRecord') }}" class="btn btn-default btn-sm"
             title="View library record" target="_blank">View Library Record</a>
     </div>

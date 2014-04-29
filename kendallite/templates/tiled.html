@@ -40,6 +40,15 @@
                 ;
             });
 
+            $(".downloads").on("click", "a", function() {
+                var bounds = map.getExtent().transform("EPSG:900913", "EPSG:4326");
+                $.get('{{ config.STATS_URL }}', {
+                    action: "Download",
+                    note: "{{ layer.id }}",
+                    extent: bounds.toString()
+                });
+            });
+
         });
     </script>
 {% endblock %}
@@ -62,7 +71,7 @@
         <input id="opacity" type="text" data-slider-min="0" data-slider-max="100"
             data-slider-step="1" data-slider-value="85" data-slider-id="opacity-slider" />
         <span>Opacity</span>
-        <div class="btn-group pull-right">
+        <div class="btn-group pull-right downloads">
             <button type="button" class="btn btn-default dropdown-toggle btn-sm"
                 data-toggle="dropdown">
                 Download as <span class="caret"></span>

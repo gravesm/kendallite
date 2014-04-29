@@ -165,14 +165,21 @@ var App = Backbone.View.extend({
      */
     setKeyword: function(ev) {
 
-        var keyword;
+        var keyword, bounds;
 
         ev.preventDefault();
 
         keyword = $(ev.currentTarget).find("input[name='keyword']").val();
+        bounds = Map.map().getExtent().transform("EPSG:900913", "EPSG:4326");
         hash.update({
             qs: 0,
             q: keyword
+        });
+
+        $.get(module.config().stats_url, {
+            action: "Search",
+            note: keyword,
+            extent: bounds.toString()
         });
 
     },
