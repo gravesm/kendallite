@@ -43,7 +43,7 @@ class Layer(base.Doc):
 
     @property
     def is_raster(self):
-        return self.datatype.lower() in ('paper map', 'raster',)
+        return self.datatype.lower() in ('scanned map', 'raster',)
 
     @property
     def is_restricted(self):
