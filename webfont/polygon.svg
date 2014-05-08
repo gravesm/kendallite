@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
+   width="512"
+   height="512"
    id="svg4456"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
@@ -24,17 +24,27 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="44.880521"
-     inkscape:cy="30.817306"
+     inkscape:zoom="0.35"
+     inkscape:cx="253.84911"
+     inkscape:cy="14.011675"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      inkscape:window-width="798"
      inkscape:window-height="710"
      inkscape:window-x="526"
      inkscape:window-y="109"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     inkscape:snap-bbox="true"
+     inkscape:snap-nodes="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3292"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata4461">
     <rdf:RDF>
@@ -43,7 +53,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -51,7 +61,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-988.36218)">
+     transform="translate(0,-540.36218)">
     <path
        sodipodi:type="star"
        style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.80000001;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -67,8 +77,8 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 31.700704,33.557846 -6.571701,39.6196 -24.163595,5.0935646 3.236422,-22.306452 37.762457,-4.7145587 z"
-       transform="matrix(1.0434773,-0.08229208,0.08446194,1.01667,24.774755,1011.6654)"
-       inkscape:transform-center-x="2.5124332"
-       inkscape:transform-center-y="-0.79211579" />
+       transform="matrix(8.3785191,-0.6607578,0.67818051,8.163272,199.00078,724.59431)"
+       inkscape:transform-center-x="20.173389"
+       inkscape:transform-center-y="-6.3602258" />
   </g>
 </svg>

@@ -1,0 +1,60 @@
+{
+  "checksum": {
+    "previous": "ad66b4b86f4a4c958e8865ac28a8265dac6d640535184b4429aee899066cf698",
+    "current": "ad66b4b86f4a4c958e8865ac28a8265dac6d640535184b4429aee899066cf698"
+  },
+  "fonts": [
+    "kendallite/static/css/fonts/kendallite.ttf",
+    "kendallite/static/css/fonts/kendallite.svg",
+    "kendallite/static/css/fonts/kendallite.woff",
+    "kendallite/static/css/fonts/kendallite.eot"
+  ],
+  "glyphs": {
+    "disc": {
+      "codepoint": 61696,
+      "source": "webfont/disc.svg"
+    },
+    "line": {
+      "codepoint": 61697,
+      "source": "webfont/line.svg"
+    },
+    "paper_map": {
+      "codepoint": 61698,
+      "source": "webfont/paper_map.svg"
+    },
+    "point": {
+      "codepoint": 61699,
+      "source": "webfont/point.svg"
+    },
+    "polygon": {
+      "codepoint": 61700,
+      "source": "webfont/polygon.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": "fontcustom.yml",
+    "css_selector": ".kendicon-{{glyph}}",
+    "debug": false,
+    "font_name": "kendallite",
+    "force": false,
+    "input": {
+      "templates": "webfont",
+      "vectors": "webfont"
+    },
+    "no_hash": true,
+    "output": {
+      "css": "webfont",
+      "fonts": "kendallite/static/css/fonts",
+      "preview": "webfont"
+    },
+    "preprocessor_path": "",
+    "quiet": false,
+    "templates": [
+      "preview"
+    ]
+  },
+  "templates": [
+    "webfont/kendallite-preview.html"
+  ]
+}

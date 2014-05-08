@@ -23,13 +23,19 @@
 }
 
 .kendicon-polygon:before {
-    content: "\e602";
+    content: "\f104";
 }
 .kendicon-point:before {
-    content: "\e603";
+    content: "\f103";
 }
 .kendicon-line:before {
-    content: "\e604";
+    content: "\f101";
+}
+.kendicon-paper-map:before {
+    content: "\f102";
+}
+.kendicon-disc:before {
+    content: "\f100";
 }
 
 .result-icon {

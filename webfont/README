@@ -1,3 +1,4 @@
-These are the SVG files used in creating the webfont for the datatype
-icons. The font can be recreated (and added to) by using the IcoMoon
-app at http://icomoon.io.
+These are the SVG files used to create the webfont for displaying various GIS
+icons. The font can be regenerated using https://github.com/FontCustom/fontcustom.
+The kendallite project root contains a fontcustom config and a manifest file
+which will be used when running the fontcustom command from project root.

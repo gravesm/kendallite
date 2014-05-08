@@ -11,10 +11,14 @@
             print('<span class="kendicon kendicon-line result-icon" title="Lines"></span>');
         } else if (o.DataType === 'Polygon') {
             print('<span class="kendicon kendicon-polygon result-icon" title="Polygons"></span>');
-        } else if (o.DataType === 'LibraryRecord') {
-            print('<span class="glyphicon glyphicon-book result-icon" title="Library Record"></span>');
+        } else if (o.DataType === 'Paper Map') {
+            print('<span class="kendicon kendicon-paper-map result-icon" title="Paper Map"></span>');
         } else if ((o.DataType === 'Raster') || (o.DataType === 'Scanned Map')) {
-            print('<span class="glyphicon glyphicon-picture result-icon" title="Raster"></span>');
+            print('<span class="glyphicon glyphicon-picture result-icon" title="')
+            print(o.DataType + '"></span>');
+        } else if ((o.DataType === 'CD-ROM') || (o.DataType === 'DVD-ROM')) {
+            print('<span class="kendicon kendicon-disc result-icon" title="')
+            print(o.DataType + '"></span>')
         } else {
             print('<span class="glyphicon"></span>');
         }
