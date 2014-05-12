@@ -6,15 +6,19 @@ map = new OpenLayers.Map({
 });
 
 map.addLayers([
+    new OpenLayers.Layer.Google("Google Streets", {
+        numZoomLevels: 20
+    }),
     new OpenLayers.Layer.Google("Google Physical", {
         type: google.maps.MapTypeId.TERRAIN
     }),
-    new OpenLayers.Layer.Google("Google Streets"),
     new OpenLayers.Layer.Google("Google Hybrid", {
-        type: google.maps.MapTypeId.HYBRID
+        type: google.maps.MapTypeId.HYBRID,
+        numZoomLevels: 20
     }),
     new OpenLayers.Layer.Google("Google Satellite", {
-        type: google.maps.MapTypeId.SATELLITE
+        type: google.maps.MapTypeId.SATELLITE,
+        numZoomLevels: 20
     })
 ]);
 
