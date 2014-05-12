@@ -5,6 +5,14 @@
     padding-left: 10px;
 }
 
+.metadata-detail dt {
+    width: 260px;
+}
+
+.metadata-detail dd {
+    margin-left: 275px;
+}
+
 .map-nav {
     margin-bottom: 10px;
 }
