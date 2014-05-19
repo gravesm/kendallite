@@ -33,6 +33,7 @@ return Backbone.View.extend({
 
         if (this.model.get('selected') === true) {
             hash.remove(name, value);
+            hash.update({qs: 0});
         } else {
             params[name] = value;
             hash.update(params, true);
