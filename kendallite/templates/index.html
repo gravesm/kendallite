@@ -67,21 +67,24 @@
     <body>
 
         <nav class="navbar navbar-static-top">
-            <div class="navbar-header">
-                <a href="{{ url_for('index') }}" title="MIT GeoWeb">
-                    <span class="blue glyphicon glyphicon-globe"></span>
-                    MIT <span class="blue">Geo</span>Web
-                </a>
-            </div>
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="{{ url_for('index') }}" title="MIT GeoWeb">
+                        <span class="blue glyphicon glyphicon-globe"></span>
+                        MIT <span class="blue">Geo</span>Web
+                    </a>
+                </div>
 
-            <ul class="nav navbar-nav navbar-right">
                 {% if not g.user %}
-                    <li><a href="{{ config.SHIB_LOGIN_URL }}?target=" class="login-shib">Log In</a></li>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ config.SHIB_LOGIN_URL }}?target=" class="login-shib">Log In</a></li>
+                    </ul>
                 {% endif %}
-            </ul>
-            {% if g.user %}
-                <p class="navbar-text navbar-right">Logged In</p>
-            {% endif %}
+
+                {% if g.user %}
+                    <p class="navbar-text navbar-right text-muted">Logged In</p>
+                {% endif %}
+            </div>
         </nav>
 
         <div class="container-fluid">
