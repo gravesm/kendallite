@@ -1,6 +1,7 @@
 from kendallite import app
 from kendallite.site.layer import Layer
 from kendallite.core import transformer
+from kendallite.core.exceptions import LayerNotFoundError
 from flask import render_template, request, g, abort, url_for, Response
 import requests
 from lxml import etree
@@ -16,7 +17,10 @@ def index():
 
 @app.route('/wfs/')
 def wfs():
-    layer = Layer.get(request.args.get('OGPID'))
+    try:
+        layer = Layer.get(request.args.get('OGPID'))
+    except LayerNotFoundError:
+        abort(404)
 
     if layer.is_restricted:
         abort(403)
@@ -33,7 +37,10 @@ def wfs():
 
 @app.route('/layer/<layer_id>/')
 def layer(layer_id):
-    layer = Layer.get(layer_id)
+    try:
+        layer = Layer.get(layer_id)
+    except LayerNotFoundError:
+        abort(404)
 
     context = { "authorized": authorized(layer) }
 
@@ -51,7 +58,10 @@ def layer(layer_id):
 
 @app.route('/layer/<layer_id>/metadata/')
 def metadata(layer_id):
-    layer = Layer.get(layer_id)
+    try:
+        layer = Layer.get(layer_id)
+    except LayerNotFoundError:
+        abort(404)
     tree = etree.fromstring(layer.fgdc.strip().encode("utf-8"))
     res = etree.tostring(tree, encoding="UTF-8", pretty_print=True)
     return Response(res,
@@ -66,7 +76,10 @@ def email_download():
     This is currently only used for downloading raster layers from Harvard.
 
     """
-    layer = Layer.get(request.args.get('OGPID'))
+    try:
+        layer = Layer.get(request.args.get('OGPID'))
+    except LayerNotFoundError:
+        abort(404)
     email = request.args.get('email')
     bbox = request.args.get('bbox') or (
         "{0},{1},{2},{3}".format(layer.minx, layer.miny, layer.maxx, layer.maxy))
