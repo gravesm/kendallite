@@ -54,7 +54,7 @@ var App = Backbone.View.extend({
 
         query = new Query();
 
-        Map.map().events.register("moveend", this, this.setBounds);
+        Map.map().on("moveend", this.setBounds);
 
         $("#search-form input[name='keyword']").val(hash.get('q'));
         if (hash.get('geofilter') === "true") {
@@ -70,18 +70,12 @@ var App = Backbone.View.extend({
         query.fetch();
 
         $(window).on("hashchange", function() {
-            var b,
-                bounds = hash.get('b'),
-                zoom = hash.get('z');
+            var bounds = hash.get('b'),
+                zoom = hash.get('z'),
+                b;
 
             query.fetch();
 
-            if (bounds) {
-                b = new OpenLayers.Bounds(bounds.split(","))
-                            .transform("EPSG:4326", "EPSG:900913");
-                Map.map().setCenter(b.getCenterLonLat(), zoom, true);
-                map.getLayersByName("Preview Layer")[0].redraw();
-            }
         });
 
         new ResultsController({
@@ -165,12 +159,14 @@ var App = Backbone.View.extend({
      */
     setKeyword: function(ev) {
 
-        var keyword, bounds;
+        var map = Map.map(),
+            keyword, bounds;
 
         ev.preventDefault();
 
         keyword = $(ev.currentTarget).find("input[name='keyword']").val();
-        bounds = Map.map().getExtent().transform("EPSG:900913", "EPSG:4326");
+        bounds = map.getView().calculateExtent(map.getSize());
+        bounds = ol.proj.transformExtent(bounds, "EPSG:3857", "EPSG:4326");
         hash.update({
             qs: 0,
             q: keyword
@@ -190,14 +186,15 @@ var App = Backbone.View.extend({
      * Triggered when the map is moved.
      */
     setBounds: function() {
+        var map = Map.map(),
+            bounds;
 
-        var bounds;
-
-        bounds = Map.map().getExtent().transform("EPSG:900913", "EPSG:4326");
+        bounds = map.getView().calculateExtent(map.getSize());
+        bounds = ol.proj.transformExtent(bounds, "EPSG:3857", "EPSG:4326");
         hash.update({
             qs: 0,
             b: bounds.toString(),
-            z: Map.map().getZoom()
+            z: map.getView().getZoom()
         });
 
     },
@@ -218,21 +215,19 @@ var App = Backbone.View.extend({
         geocoder.geocode({
             address: place
         }, function(result, status) {
-
-            var bounds, vp;
+            var map = Map.map(),
+                bounds, vp;
 
             vp = result[0].geometry.viewport;
 
-            bounds = new OpenLayers.Bounds([
+            bounds = [
                 vp.getSouthWest().lng(),
                 vp.getSouthWest().lat(),
                 vp.getNorthEast().lng(),
                 vp.getNorthEast().lat()
-            ]);
-
-            bounds.transform("EPSG:4326", "EPSG:900913");
-
-            Map.map().zoomToExtent(bounds);
+            ];
+            bounds = ol.proj.transformExtent(bounds, "EPSG:4326", "EPSG:3857");
+            map.getView().fitExtent(bounds, map.getSize());
 
         });
     }

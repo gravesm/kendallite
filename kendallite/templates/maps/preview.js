@@ -1,13 +1,24 @@
-var preview_layer = new OpenLayers.Layer.Vector("Preview Layer", {
-    projection: "ESPG:4326"
-});
+var previewlayer = new ol.source.Vector();
 
-preview_layer.addFeatures([
-    new OpenLayers.Feature.Vector(
-        OpenLayers.Geometry.fromWKT('{{ layer.wkt }}').transform(
-            'EPSG:4326', 'EPSG:900913'
-        )
-    )
-]);
+previewlayer.addFeature(new ol.Feature({
+    geometry: new ol.geom.Polygon([[
+        [extent[0], extent[1]],
+        [extent[2], extent[1]],
+        [extent[2], extent[3]],
+        [extent[0], extent[3]],
+        [extent[0], extent[1]]
+    ]])
+}));
 
-map.addLayer(preview_layer);
+map.addLayer(new ol.layer.Vector({
+    source: previewlayer,
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(195,130,45,0.5)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: 'rgba(195,130,45,0.8)',
+            width: 2
+        })
+    })
+}));

@@ -6,7 +6,8 @@
             {% include 'maps/base.js' %}
             {% include 'maps/preview.js' %}
             $(".downloads").on("click", "a", function() {
-                var bounds = map.getExtent().transform("EPSG:900913", "EPSG:4326");
+                var bounds = map.getView().calculateExtent(map.getSize());
+                bounds = ol.proj.transformExtent(bounds, "EPSG:3857", "EPSG:4326");
                 $.get('{{ config.STATS_URL }}', {
                     action: "Download",
                     note: "{{ layer.id }}",

@@ -1,86 +1,59 @@
-define([
-    'vendor/text!tmpl/layer_switcher.html',
-], function(Tmpl) {
+define(function() {
 
 var Map = function() {
-
     var previewlayer, map;
 
     this.initialize = function(options) {
+        var opts, center, extent;
 
-        var opts, tmpl, center;
+        previewlayer = new ol.source.Vector();
 
         opts = {
-            div: "map",
-            projection: "EPSG:900913",
-            controls: [
-                new OpenLayers.Control.Navigation({documentDrag: true}),
-                new OpenLayers.Control.Zoom({
-                    zoomInId: "zoom-in",
-                    zoomOutId: "zoom-out"
+            target: "map",
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                new ol.layer.Vector({
+                    source: previewlayer,
+                    style: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(195,130,45,0.5)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: 'rgba(195,130,45,0.8)',
+                            width: 2
+                        })
+                    })
                 })
             ]
         };
 
         _.extend(opts, options);
 
-        map = new OpenLayers.Map(opts);
-
-        previewlayer = new OpenLayers.Layer.Vector("Preview Layer", {
-            projection: "EPSG:4326"
-        });
-
-        map.addLayers([
-            new OpenLayers.Layer.Google("Google Streets", {
-                numZoomLevels: 20
-            }),
-            new OpenLayers.Layer.Google("Google Physical", {
-                type: google.maps.MapTypeId.TERRAIN
-            }),
-            new OpenLayers.Layer.Google("Google Hybrid", {
-                type: google.maps.MapTypeId.HYBRID,
-                numZoomLevels: 20
-            }),
-            new OpenLayers.Layer.Google("Google Satellite", {
-                type: google.maps.MapTypeId.SATELLITE,
-                numZoomLevels: 20
-            }),
-            previewlayer
-        ]);
+        map = new ol.Map(opts);
 
         if (opts.b && opts.z) {
-            center = new OpenLayers.Bounds(opts.b.split(",")).getCenterLonLat();
-            center.transform("EPSG:4326", "EPSG:900913");
-            map.setCenter(center, opts.z);
+            extent = _.map(opts.b.split(","), function(num) {
+                return parseFloat(num, 10);
+            });
+            extent = ol.proj.transformExtent(extent, "EPSG:4326", "EPSG:3857");
+            map.setView(new ol.View({
+                center: ol.extent.getCenter(extent),
+                zoom: opts.z
+            }));
         } else {
-            center = new OpenLayers.LonLat(-105, 40)
-                .transform("EPSG:4326", "EPSG:900913");
-            map.setCenter(center, 3);
+            map.setView(new ol.View({
+                center: ol.proj.transform([-105, 40], "EPSG:4326", "EPSG:3857"),
+                zoom: 3
+            }));
         }
 
-        /**
-         * Generate the layer switcher
-         */
-        tmpl = _.template(Tmpl);
-
-        _.each(map.layers, function(layer) {
-            if (layer.isBaseLayer) {
-                $(".map-layers").append(tmpl(layer));
-            }
-        });
-
-        $(".map-layers").on("click", "a", function(ev) {
-            ev.preventDefault();
-            map.setBaseLayer(map.getLayer($(this).data("layerid")));
-        });
-
-        /**
-         * OL does not provide an easy way to set arbitrary divs as controls.
-         * We'll have to hard code some things here.
-         */
         $("#zoom-max").on("click", function() {
-            map.setCenter([0,0]);
-            map.zoomToMaxExtent();
+            map.setView(new ol.View({
+                center: ol.proj.transform([0,0], "EPSG:4326", "EPSG:3857"),
+                zoom: 1
+            }));
         });
 
     };
@@ -93,16 +66,24 @@ var Map = function() {
     this.addPreviewBox = function(box) {
         var bbox, extent;
 
-        bbox = new OpenLayers.Bounds(box).transform("EPSG:4326", "EPSG:900913");
+        extent = ol.proj.transformExtent(box, "EPSG:4326", "EPSG:3857");
 
-        extent = new OpenLayers.Feature.Vector(bbox.toGeometry());
+        bbox = new ol.Feature({
+            geometry: new ol.geom.Polygon([[
+                [extent[0], extent[1]],
+                [extent[2], extent[1]],
+                [extent[2], extent[3]],
+                [extent[0], extent[3]],
+                [extent[0], extent[1]]
+            ]])
+        });
 
-        previewlayer.removeAllFeatures();
-        previewlayer.addFeatures([extent]);
+        previewlayer.clear();
+        previewlayer.addFeature(bbox);
     };
 
     this.removePreviewBoxes = function() {
-        previewlayer.removeAllFeatures();
+        previewlayer.clear();
     };
 
     this.map = function() {

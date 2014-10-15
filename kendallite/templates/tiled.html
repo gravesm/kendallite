@@ -41,7 +41,8 @@
             });
 
             $(".downloads").on("click", "a", function() {
-                var bounds = map.getExtent().transform("EPSG:900913", "EPSG:4326");
+                var bounds = map.getView().calculateExtent(map.getSize());
+                bounds = ol.proj.transformExtent(bounds, "EPSG:3857", "EPSG:4326");
                 $.get('{{ config.STATS_URL }}', {
                     action: "Download",
                     note: "{{ layer.id }}",
@@ -82,20 +83,16 @@
                         <li><a href="#email-prompt" data-toggle="modal">High resolution image</a></li>
                     {% else %}
                         <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
+                        {% if layer.institution.lower() == 'mit' %}
+                            <li><a href="{{ layer.location['wms'][0] }}/reflect?format=image/geotiff&layers={{ layer.layer_name }}&width=1024">GeoTIFF</a></li>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <li><a href="{{ layer.location['wms'][0] }}?VERSION=1.1.1&REQUEST=GetMap&SRS=epsg:4326&BBOX={{ layer.minx }},{{ layer.miny }},{{ layer.maxx }},{{ layer.maxy }}&LAYERS={{ layer.layer_name }}&WIDTH=512&HEIGHT=512&FORMAT=kmz&TILED=no&format_options=kmattr:true;kmscore:100;">KMZ</a></li>
-                    <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=2.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
+                    <li><a href="{{ layer.location['wfs'] }}?service=wfs&version=1.0.0&request=GetFeature&typeName={{ layer.layer_name }}&outputFormat=shape-zip">Shapefile</a></li>
                 {% endif %}
             </ul>
         </div>
-    {% endif %}
-{% endblock %}
-
-{% block map_overlay %}
-    {% if authorized %}
-        <div class="map-overlay overlay-background"></div>
-        <div class="map-overlay overlay-text">Loading layer...</div>
     {% endif %}
 {% endblock %}
 

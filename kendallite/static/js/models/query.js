@@ -36,7 +36,8 @@ return Backbone.Model.extend({
 
         var bounds, boosts, q, filters = [];
 
-            bounds = this._toBounds(this.get('b'));
+            bounds = this.get('b') || [];
+            bounds = this._toBounds(bounds.pop());
             boosts = this.get('boosts');
             q = _.first(this.get('q')) || "*";
 
@@ -154,41 +155,40 @@ return Backbone.Model.extend({
     },
 
     intersection: function(b) {
-
         var intersection;
 
-        intersection = "product(max(0,sub(min("+b.right+",MaxX),max("+b.left+",MinX))),";
-        intersection += "max(0,sub(min("+b.top+",MaxY),max("+b.bottom+",MinY))))";
-
+        intersection = "product(max(0,sub(min("+b[2]+",MaxX),max("+b[0]+",MinX))),";
+        intersection += "max(0,sub(min("+b[3]+",MaxY),max("+b[1]+",MinY))))";
         return intersection;
 
     },
 
     union: function(b) {
+        var size = ol.extent.getSize(b),
+            area;
 
-        var bounds = b.toGeometry().getArea();
-
-        return "sub(sum(" + bounds + ",Area),$intx)";
+        area = size[0] * size[1];
+        return "sub(sum(" + area + ",Area),$intx)";
 
     },
 
     centerRelevancy: function(b) {
-
-        var score,
-            center = b.getCenterLonLat();
+        var center = ol.extent.getCenter(b),
+            score;
 
         score = "if(and(exists(CenterX),exists(CenterY)),";
-        score += "recip(sqedist(CenterX,CenterY,"+center.lon+","+center.lat+"),1,1000,1000),0)";
+        score += "recip(sqedist(CenterX,CenterY,"+center[0]+","+center[1]+"),1,1000,1000),0)";
 
         return score;
 
     },
 
     areaRelevancy: function(b) {
+        var size = ol.extent.getSize(b),
+            area;
 
-        var map = b.toGeometry().getArea();
-
-        return "if(exists(Area),recip(abs(sub(Area," + map + ")),1,100,100),0)";
+        area = size[0] * size[1];
+        return "if(exists(Area),recip(abs(sub(Area," + area + ")),1,100,100),0)";
 
     },
 
@@ -221,9 +221,12 @@ return Backbone.Model.extend({
 
     _toBounds: function(bounds) {
         if (bounds) {
-            return new OpenLayers.Bounds(bounds[0].split(","));
+            bounds = _.map(bounds.split(','), function(num) {
+                return parseFloat(num, 10);
+            });
+            return bounds;
         } else {
-            return new OpenLayers.Bounds(-180, -90, 180, 90);
+            return [-180, -90, 180, 90];
         }
     }
 

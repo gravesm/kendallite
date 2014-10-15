@@ -46,25 +46,18 @@ define(['models/query'], function(Query) {
 
         describe("_toBounds", function() {
             it("converts a comma-separated list of values to bounds", function() {
-                var bounds = query._toBounds(["1,2,3,4"]);
-                expect(bounds.left).toBe(1);
-                expect(bounds.bottom).toBe(2);
-                expect(bounds.right).toBe(3);
-                expect(bounds.top).toBe(4);
+                var bounds = query._toBounds("1,2,3,4");
+                expect(bounds).toEqual([1,2,3,4]);
             });
             it("returns global extent as default", function() {
                 var bounds = query._toBounds();
-                expect(bounds.left).toBe(-180);
-                expect(bounds.bottom).toBe(-90);
-                expect(bounds.right).toBe(180);
-                expect(bounds.top).toBe(90);
+                expect(bounds).toEqual([-180,-90,180,90]);
             });
         });
 
         describe("intersection", function() {
             it("creates intersection query from bounds", function() {
-                var bounds = new OpenLayers.Bounds([1,2,3,4]);
-                expect(query.intersection(bounds)).toBe(
+                expect(query.intersection([1,2,3,4])).toBe(
                     "product(max(0,sub(min(3,MaxX),max(1,MinX))),max(0,sub(min(4,MaxY),max(2,MinY))))"
                 );
             });
@@ -72,8 +65,7 @@ define(['models/query'], function(Query) {
 
         describe("centerRelevancy", function() {
             it("creates center relevancy query from bounds", function() {
-                var bounds = new OpenLayers.Bounds([0,0,40,20]);
-                expect(query.centerRelevancy(bounds)).toBe(
+                expect(query.centerRelevancy([0,0,40,20])).toBe(
                     "if(and(exists(CenterX),exists(CenterY)),recip(sqedist(CenterX,CenterY,20,10),1,1000,1000),0)"
                 );
             });
@@ -81,8 +73,7 @@ define(['models/query'], function(Query) {
 
         describe("areaRelevancy", function() {
             it("creates area relevancy query from bounds", function() {
-                var bounds = new OpenLayers.Bounds([-10,-10,10,10]);
-                expect(query.areaRelevancy(bounds)).toBe(
+                expect(query.areaRelevancy([-10,-10,10,10])).toBe(
                     "if(exists(Area),recip(abs(sub(Area,400)),1,100,100),0)"
                 );
             });
@@ -166,7 +157,7 @@ define(['models/query'], function(Query) {
 
         describe("boostFunctions", function() {
 
-            var b = new OpenLayers.Bounds(1,2,3,4);
+            var b = [1,2,3,4];
 
             beforeEach(function() {
                 spyOn(query, "areaRelevancy").andReturn("23");
@@ -190,7 +181,7 @@ define(['models/query'], function(Query) {
 
         describe("union", function() {
             it("creates union query parameter from bounds", function() {
-                var b = new OpenLayers.Bounds(-10,-10,10,10);
+                var b = [-10,-10,10,10];
 
                 expect(query.union(b)).toBe("sub(sum(400,Area),$intx)");
             });

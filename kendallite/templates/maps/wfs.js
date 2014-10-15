@@ -1,24 +1,20 @@
-var wfs_control, wfs_tmpl;
+map.on('singleclick', function(e) {
+    var wfs_tmpl, url, wfs_url;
 
-wfs_control = new OpenLayers.Control.WMSGetFeatureInfo({
-    url: '{{ wfs }}',
-    layerUrls: {{ layer.wms_urls }},
-    infoFormat: 'application/vnd.ogc.gml',
-    vendorParams: {
-        OGPID: '{{ layer.id }}'
-    }
-});
-
-wfs_tmpl = _.template($("#feature-tmpl").html());
-
-wfs_control.events.register("getfeatureinfo", this, function(ev) {
-    $("#features-content").empty();
-    _.each(ev.features, function(feature) {
-        $("#features-content").append(wfs_tmpl(feature));
+    wfs_tmpl = _.template($("#feature-tmpl").html());
+    url = wms_source.getGetFeatureInfoUrl(e.coordinate,
+        map.getView().getResolution(),
+        "EPSG:3857", {
+            INFO_FORMAT: "application/json",
+            OGPID: '{{ layer.id }}'
+        }
+    );
+    wfs_url = '{{ wfs }}' + '?' + url.split("?")[1];
+    $.getJSON(wfs_url).done(function(data) {
+        $("#features-content").empty();
+        _.each(data.features, function(feature) {
+            $("#features-content").append(wfs_tmpl(feature));
+        });
+        $("#features-dialog").modal();
     });
-    $("#features-dialog").modal();
 });
-
-map.addControl(wfs_control);
-
-wfs_control.activate();

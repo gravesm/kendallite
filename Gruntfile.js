@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                     vendor: [
                         'kendallite/static/libs/underscore.js',
                         'kendallite/static/libs/backbone.js',
-                        'kendallite/static/openlayers/OpenLayers.js'
+                        'kendallite/static/ol3/ol.js'
                     ],
                     host: "http://127.0.0.1:8000/",
                     template: require("grunt-template-jasmine-requirejs"),
