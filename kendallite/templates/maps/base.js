@@ -11,6 +11,10 @@ map = new ol.Map({
 
 box = new ol.format.WKT().readFeature('{{ layer.wkt }}');
 extent = box.getGeometry().getExtent();
+
+extent[1] = extent[1] < -85.06 ? -85.06 : extent[1];
+extent[3] = extent[3] > 85.06 ? 85.06 : extent[3];
+
 extent = ol.proj.transformExtent(extent, "EPSG:4326", "EPSG:3857");
 map.getView().fitExtent(extent, map.getSize());
 

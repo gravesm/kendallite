@@ -66,6 +66,9 @@ var Map = function() {
     this.addPreviewBox = function(box) {
         var bbox, extent;
 
+        box[1] = box[1] < -85.06 ? -85.06 : box[1];
+        box[3] = box[3] > 85.06 ? 85.06 : box[3];
+
         extent = ol.proj.transformExtent(box, "EPSG:4326", "EPSG:3857");
 
         bbox = new ol.Feature({
