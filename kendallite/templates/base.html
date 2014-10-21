@@ -40,6 +40,14 @@
                             id="zoom-to-layer">
                             <span class="glyphicon glyphicon-zoom-in"></span>
                         </button>
+                        <div class="btn-group">
+                            <button type="button" data-toggle="dropdown"
+                                class="dropdown-toggle btn btn-default btn-sm">
+                                Base Layers <b class="caret"></b>
+                            </button>
+                            <ul class="dropdown-menu map-layers">
+                            </ul>
+                        </div>
                     {% endblock %}
                     {% block download_controls %}{% endblock %}
                 </div>
@@ -87,6 +95,13 @@
         </div>
 
         {% include 'footer.html' %}
+        <script type="text/x-tmpl" id="layer-switcher">
+            <li>
+                <a href='#' data-layerid="<%= title %>">
+                    <%= title %>
+                </a>
+            </li>
+        </script>
         <script type="text/x-tmpl" id="feature-tmpl">
             <div class="panel panel-default">
                 <div class="panel-heading">

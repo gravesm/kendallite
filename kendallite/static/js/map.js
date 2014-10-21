@@ -1,32 +1,65 @@
-define(function() {
+define([
+    'vendor/text!tmpl/layer_switcher.html',
+], function(Tmpl) {
 
 var Map = function() {
-    var previewlayer, map;
+    var bing_key = 'AkFIrXPDm0XaKbLTi4eP46yoxo_bjbnGp9KOjqB_t7lclaNgMAl6EzoLtXsC2smS',
+        previewlayer, map;
 
     this.initialize = function(options) {
-        var opts, center, extent;
+        var opts, center, extent, tmpl, baselayers;
 
-        previewlayer = new ol.source.Vector();
+        previewlayer = new ol.layer.Vector({
+            title: 'Preview Layer',
+            source: new ol.source.Vector(),
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(195,130,45,0.5)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(195,130,45,0.8)',
+                    width: 2
+                })
+            })
+        });
+
+        baselayers = new ol.layer.Group({
+            layers: [
+                new ol.layer.Tile({
+                    title: 'OpenStreetMap',
+                    source: new ol.source.OSM(),
+                    preload: Infinity
+                }),
+                new ol.layer.Tile({
+                    title: 'Roads',
+                    source: new ol.source.BingMaps({
+                        key: bing_key,
+                        imagerySet: 'Road'
+                    }),
+                    visible: false
+                }),
+                new ol.layer.Tile({
+                    title: 'Aerial',
+                    source: new ol.source.BingMaps({
+                        key: bing_key,
+                        imagerySet: 'Aerial'
+                    }),
+                    visible: false
+                }),
+                new ol.layer.Tile({
+                    title: 'Aerial with Labels',
+                    source: new ol.source.BingMaps({
+                        key: bing_key,
+                        imagerySet: 'AerialWithLabels'
+                    }),
+                    visible: false
+                })
+            ]
+        });
 
         opts = {
             target: "map",
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                }),
-                new ol.layer.Vector({
-                    source: previewlayer,
-                    style: new ol.style.Style({
-                        fill: new ol.style.Fill({
-                            color: 'rgba(195,130,45,0.5)'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: 'rgba(195,130,45,0.8)',
-                            width: 2
-                        })
-                    })
-                })
-            ]
+            layers: [baselayers, previewlayer]
         };
 
         _.extend(opts, options);
@@ -48,6 +81,27 @@ var Map = function() {
                 zoom: 3
             }));
         }
+
+        /**
+         * Generate layer switcher
+         */
+        tmpl = _.template(Tmpl);
+
+        baselayers.getLayers().forEach(function(layer) {
+            $(".map-layers").append(tmpl({ 'title': layer.get('title') }));
+        });
+
+        $(".map-layers").on("click", "a", function(ev) {
+            var layerid = $(this).data('layerid');
+            ev.preventDefault();
+            baselayers.getLayers().forEach(function(layer) {
+                if (layer.get("title") === layerid) {
+                    layer.setVisible(true);
+                } else {
+                    layer.setVisible(false);
+                }
+            });
+        });
 
         $("#zoom-max").on("click", function() {
             map.setView(new ol.View({
@@ -81,12 +135,12 @@ var Map = function() {
             ]])
         });
 
-        previewlayer.clear();
-        previewlayer.addFeature(bbox);
+        previewlayer.getSource().clear();
+        previewlayer.getSource().addFeature(bbox);
     };
 
     this.removePreviewBoxes = function() {
-        previewlayer.clear();
+        previewlayer.getSource().clear();
     };
 
     this.map = function() {
